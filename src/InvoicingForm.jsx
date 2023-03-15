@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CurrenciesData from '../currencies.json'
+import InputField from './components/InputField';
 
 function InvoicingForm() {
   // useEffect(() => {
@@ -17,7 +18,9 @@ function InvoicingForm() {
   // const [loading, setLoading] = useState(true)
   const [currencies, setCurrencies] = useState(CurrenciesData)
   const [formData, setFormData] = useState({
+    recipientName: '',
     recipientEmail: '',
+    clientName: '',
     projectDescription: '',
     issuedOn: '',
     dueOn: '',
@@ -81,60 +84,69 @@ function InvoicingForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Recipient Email:
-        <input
-          type="email"
-          name="recipientEmail"
-          value={formData.recipientEmail}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Project Description:
-        <input
-          type="text"
-          name="projectDescription"
-          value={formData.projectDescription}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Issued On:
-        <input
-          type="date"
-          name="issuedOn"
-          value={formData.issuedOn}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Due On:
-        <input
-          type="date"
-          name="dueOn"
-          value={formData.dueOn}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Bill From:
-        <input
-          type="text"
-          name="billFrom"
-          value={formData.billFrom}
-          onChange={handleInputChange}
-        />
-      </label>
-      <label>
-        Bill To:
-        <input
-          type="text"
-          name="billTo"
-          value={formData.billTo}
-          onChange={handleInputChange}
-        />
-      </label>
+      <InputField
+        title="Recipient name"
+        onChange={handleInputChange}
+        type="text"
+        name="recipientName"
+        value={formData.recipientName}
+      />
+      <InputField
+        title="Recipient email"
+        onChange={handleInputChange}
+        type="email"
+        name="recipientEmail"
+        value={formData.recipientEmail}
+      />
+      <InputField
+        title="Client name"
+        onChange={handleInputChange}
+        type="text"
+        name="clientName"
+        value={formData.clientName}
+      />
+      <InputField
+        title="Project Description"
+        onChange={handleInputChange}
+        type="text"
+        name="projectDescription"
+        value={formData.projectDescription}
+      />
+      <InputField
+        title="Project Description"
+        onChange={handleInputChange}
+        type="text"
+        name="projectDescription"
+        value={formData.projectDescription}
+      />
+      <InputField
+        title="Issued On"
+        onChange={handleInputChange}
+        type="date"
+        name="issuedOn"
+        value={formData.issuedOn}
+      />
+      <InputField
+        title="Due On"
+        onChange={handleInputChange}
+        type="date"
+        name="dueOn"
+        value={formData.dueOn}
+      />
+      <InputField
+        title="Bill From"
+        onChange={handleInputChange}
+        type="text"
+        name="billFrom"
+        value={formData.billFrom}
+      />
+      <InputField
+        title="Bill To"
+        onChange={handleInputChange}
+        type="text"
+        name="billTo"
+        value={formData.billTo}
+      />
       <label>
         <select
           name="currency"
@@ -147,7 +159,7 @@ function InvoicingForm() {
           })}
         </select>
       </label>
-      <h2>Items</h2>
+      <h2 >Items</h2>
       {formData.items.map((item, index) => (
         <div key={index}>
           <label>

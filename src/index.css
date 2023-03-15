@@ -1,18 +1,4 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-  margin: 4rem auto;
-
-  min-width: 320px;
-  max-width: 600px;
-  min-height: 100vh;
-}

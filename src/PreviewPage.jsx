@@ -30,6 +30,14 @@ function PreviewPage() {
     doc.setFontSize(22);
     doc.text("Invoice", 105, 20, { align: "center" });
 
+    // add recipient Name
+    doc.setFontSize(14);
+    doc.text(`To: ${formData.recipientName}`, 20, 40);
+
+    // add Client Name
+    doc.setFontSize(14);
+    doc.text(`To: ${formData.clientName}`, 20, 40);
+
     // add recipient email
     doc.setFontSize(14);
     doc.text(`To: ${formData.recipientEmail}`, 20, 40);
@@ -78,6 +86,8 @@ function PreviewPage() {
     <div>
       <h1>Preview</h1>
       <p>Recipient Email: {formData.recipientEmail}</p>
+      <p>Recipient name: {formData.recipientName}</p>
+      <p>Client Name: {formData.clientName}</p>
       <p>Project Description: {formData.projectDescription}</p>
       <p>Issued On: {formData.issuedOn}</p>
       <p>Due On: {formData.dueOn}</p>
