@@ -60,7 +60,7 @@ function PreviewPage() {
     let y = 90;
     formData.items.forEach((item) => {
       doc.text(
-        `${item.item}: ${item.quantity} x ${item.price} = ${item.totalPrice}`,
+        `${item.item}: ${item.quantity} x ${item.price} = ${item.totalPrice} ${formData.currency}`,
         20,
         y
       );
@@ -88,6 +88,7 @@ function PreviewPage() {
         {formData.items.map((item, index) => (
           <li key={index}>
             {item.item}: {item.quantity} x {item.price} = {item.totalPrice}
+            {formData.currency}
           </li>
         ))}
       </ul>
