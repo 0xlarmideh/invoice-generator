@@ -1,31 +1,19 @@
-
-// InvoicingForm.js
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import CurrenciesData from '../currencies.json'
-import InputField from './components/InputField';
-import InputFieldRO from './components/InputFieldRO';
-import TextArea from './components/TextArea';
-import { Heading, SmallHeading } from './components/Typography';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import InputField from "./components/InputField";
+import InputFieldRO from "./components/InputFieldRO";
+import TextArea from "./components/TextArea";
+import { Heading, SmallHeading } from "./components/Typography";
+import React from 'react'
 import Button from './components/Button';
 
-function InvoicingForm() {
-
+const EditPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const formedData = location.state?.formData;
   const [currencies, setCurrencies] = useState(CurrenciesData);
-  const [formData, setFormData] = useState({
-    recipientName: "",
-    recipientEmail: "",
-    clientName: "",
-    projectDescription: "",
-    issuedOn: "",
-    dueOn: "",
-    billFrom: "",
-    billTo: "",
-    currency: "",
-    items: [],
-    notes: "",
-  });
+  const [formData, setFormData] = useState(formedData);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -220,4 +208,6 @@ function InvoicingForm() {
   );
 }
 
-export default InvoicingForm;
+
+
+export default EditPage

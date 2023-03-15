@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Heading, SmallHeading, Paragraph } from "./components/Typography";
+import Button from "./components/Button";
 
 import jsPDF from "jspdf";
 
@@ -7,13 +9,13 @@ function PreviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const formData = location.state?.formData;
-
-  // const totalPrice = formData.items.reduce(
-  //   (accumulator, currentItem) =>
-  //     accumulator + currentItem.price * currentItem.quantity,
-  //   0
-  // );
-  const totalPrice = eval(formData.items.price * formData.items.quantity);
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, [])
 
   if (!formData) {
     navigate("/");
@@ -21,7 +23,8 @@ function PreviewPage() {
   }
 
   const handleEditClick = () => {
-    navigate("/", {state: {formData} });
+    // window.history.back()
+    navigate('/edit', {state: {formData} });
   };
 
   const handleDownloadClick = () => {
@@ -82,35 +85,87 @@ function PreviewPage() {
     doc.save("invoice.pdf");
   };
 
-  return (
+  return loading ? (
+    <div className="loading-spinner">
+      <span className="loader"></span>
+    </div>
+  ) : (
     <div>
-      <h1>Preview</h1>
-      <p>Recipient Email: {formData.recipientEmail}</p>
-      <p>Recipient name: {formData.recipientName}</p>
-      <p>Client Name: {formData.clientName}</p>
-      <p>Project Description: {formData.projectDescription}</p>
-      <p>Issued On: {formData.issuedOn}</p>
-      <p>Due On: {formData.dueOn}</p>
-      <p>Bill From: {formData.billFrom}</p>
-      <p>Bill To: {formData.billTo}</p>
-      <p>Items:</p>
-      <ul>
+      <Heading
+        title="Invoice Preview"
+        className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
+      />
+      <div className="flex gap-6 mb-[1rem]">
+        <div>
+          <Paragraph title="Issued On" className="text-slate-500" />
+          <SmallHeading title={formData.issuedOn} />
+        </div>
+        <div>
+          <Paragraph title="Due On" className="text-slate-500" />
+          <SmallHeading title={formData.dueOn} />
+        </div>
+      </div>
+      <div className="grid gap-6 grid-cols-2 mb-[1rem]">
+        <div>
+          <Paragraph title="Bill From" className="text-slate-500" />
+          <SmallHeading title={formData.recipientName} />
+          <Paragraph title={formData.billFrom} className="text-slate-500" />
+        </div>
+        <div>
+          <Paragraph title="Bill To" className="text-slate-500" />
+          <SmallHeading title={formData.clientName} />
+          <Paragraph title={formData.billTo} className="text-slate-500" />
+        </div>
+      </div>
+      <SmallHeading className="mb-[1.2rem] pt-[.4rem] " title="Invoice Items" />
+      <div className="border-slate-200 border-2 rounded-[10px]">
+        <div className="grid grid-cols-[51%_15%_10%_19%] py-[.4rem] px-[.35rem] text-slate-500 bg-slate-100 ">
+          <Paragraph className="text-[1.2rem]" title="Description" />
+          <Paragraph title="Price" />
+          <Paragraph title="Qty" />
+          <Paragraph title="Total " />
+        </div>
         {formData.items.map((item, index) => (
-          <li key={index}>
-            {item.item}: {item.quantity} x {item.price} = {item.totalPrice}
-            {formData.currency}
-          </li>
+          <div
+            className={`grid grid-cols-[51%_15%_10%_19%] py-[.8rem] px-[.35rem] ${
+              index !== formData.items.length - 1 && "border-b-2"
+            } `}
+            key={index}
+          >
+            <SmallHeading title={item.item} />
+            <SmallHeading title={item.price} />
+            <SmallHeading title={item.quantity} />
+            <SmallHeading title={item.totalPrice + formData.currency} />
+            {/* {item.item}: {item.quantity} x {item.price} = {item.totalPrice}
+            {formData.currency} */}
+          </div>
         ))}
-      </ul>
-      <p>Notes: {formData.notes}</p>
-      <button type="button" onClick={handleEditClick}>
-        Edit
-      </button>
-      <button type="button" onClick={handleDownloadClick}>
-        Download PDF
-      </button>
+      </div>
+      <div className="grid grid-cols-[51%_26%_19%] py-[.4rem] px-[.35rem] ">
+        <Paragraph className="text-slate-500" title={formData.notes} />
+        <SmallHeading
+          className="text-slate-500 text-[1rem]"
+          title="Total Amount"
+        />
+        {/* <SmallHeading title={`${form}`} /> */}
+      </div>
+
+      <div className="my-[2rem]"></div>
+      <div className="flex gap-2">
+        <Button
+          onClick={handleEditClick}
+          title="Edit"
+          className="bg-slate-600"
+        />
+        <Button
+          onClick={handleDownloadClick}
+          title="Download PDF"
+          className="bg-purple-800"
+        />
+      </div>
     </div>
   );
+  
 }
 
 export default PreviewPage;

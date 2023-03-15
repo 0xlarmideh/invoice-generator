@@ -13,11 +13,11 @@ export const SubHeading = ({ title, className }) => {
 };
 
 //Small heading component
-export const SmallHeading = ({ title }) => {
-  return <h3 className="text-xl font-bold">{title}</h3>;
+export const SmallHeading = ({ title, className }) => {
+  return <h3 className={`text-[1.33rem] font-bold ${className}`}>{title}</h3>;
 };
 
 // Regular P tag
-export const Paragraph = ({ title }) => {
-  return <p className="text-md my-2 paragraph">{title}</p>;
+export const Paragraph = ({ title, className }) => {
+  return <p className={`text-md paragraph ${className}`}>{title}</p>;
 };

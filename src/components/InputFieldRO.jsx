@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InputField = ({title, type, name, value, onChange}) => {
+const InputFieldRO = ({title, type, name, value, onChange}) => {
   return (
     <div className="flex flex-col">
       <label className="text-[1.1rem] font-medium py-[.4rem] text-slate-500">
@@ -11,10 +11,11 @@ const InputField = ({title, type, name, value, onChange}) => {
         name={name}
         value={value}
         onChange={onChange}
-        className="font-medium text-[1.3rem] py-2 px-4 border-[2px] border-slate-200 focus:outline-none focus:border-green-300 rounded-[10px] "
+        readOnly
+        className="font-medium text-[1.3rem] py-2 px-4 border-[2px] border-slate-200 bg-slate-100 outline-none  rounded-[10px] "
       />
     </div>
   );
 }
 
-export default InputField
+export default InputFieldRO
