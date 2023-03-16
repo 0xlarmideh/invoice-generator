@@ -14,7 +14,7 @@ function PreviewPage() {
     setLoading(true)
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 1000);
   }, [])
 
   if (!formData) {
@@ -31,15 +31,9 @@ function PreviewPage() {
     navigate('/downloaded')
     setTimeout(() => {
       const doc = new jsPDF();
-      // add title
       doc.setFontSize(33);
       doc.text("Invoice", 105, 20, { align: "center" });
 
-      // add recipient Name
-      // doc.setFontSize(12);
-      // doc.setFontSize(17);
-
-      // add Client Name
       doc.setFontSize(12);
       doc.setTextColor('blue')
       doc.text(`Billed From`, 20, 40);
@@ -109,7 +103,7 @@ function PreviewPage() {
 
 
       doc.save("invoice.pdf");
-    }, 1000);
+    }, 1500);
   };
 
   return loading ? (

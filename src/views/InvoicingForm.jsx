@@ -15,7 +15,7 @@ function InvoicingForm() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 1000);
   }, []);
   const navigate = useNavigate();
   const [currencies, setCurrencies] = useState(CurrenciesData);
