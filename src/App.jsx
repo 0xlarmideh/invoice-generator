@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Downloaded from "./Downloaded";
+import Downloaded from "./views/Downloaded";
 import EditPage from "./EditPage";
-import HomePage from "./HomePage";
-import InvoicingForm from "./InvoicingForm";
-import PreviewPage from "./PreviewPage";
+import HomePage from "./views/HomePage";
+import InvoicingForm from "./views/InvoicingForm";
+import PreviewPage from "./views/PreviewPage";
 
 function App() {
   return (

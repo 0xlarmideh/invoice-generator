@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Heading, SmallHeading, Paragraph } from "./components/Typography";
-import Button from "./components/Button";
+import { Heading, SmallHeading, Paragraph } from "../components/Typography";
+import Button from "../components/Button";
 
 import jsPDF from "jspdf";
 

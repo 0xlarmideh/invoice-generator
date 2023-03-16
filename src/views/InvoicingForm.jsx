@@ -2,12 +2,12 @@
 // InvoicingForm.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CurrenciesData from '../currencies.json'
-import InputField from './components/InputField';
-import InputFieldRO from './components/InputFieldRO';
-import TextArea from './components/TextArea';
-import { Heading, SmallHeading } from './components/Typography';
-import Button from './components/Button';
+import CurrenciesData from '../../currencies.json'
+import InputField from '../components/InputField';
+import InputFieldRO from '../components/InputFieldRO';
+import TextArea from '../components/TextArea';
+import { Heading, SmallHeading } from '../components/Typography';
+import Button from '../components/Button';
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
