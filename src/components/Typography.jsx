@@ -14,7 +14,7 @@ export const SubHeading = ({ title, className }) => {
 
 //Small heading component
 export const SmallHeading = ({ title, className }) => {
-  return <h3 className={`text-[1.33rem] font-bold ${className}`}>{title}</h3>;
+  return <h3 className={`text-[1.1rem] font-bold ${className}`}>{title}</h3>;
 };
 
 // Regular P tag

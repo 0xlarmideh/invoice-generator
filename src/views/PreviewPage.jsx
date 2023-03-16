@@ -32,57 +32,81 @@ function PreviewPage() {
     setTimeout(() => {
       const doc = new jsPDF();
       // add title
-      doc.setFontSize(22);
+      doc.setFontSize(33);
       doc.text("Invoice", 105, 20, { align: "center" });
 
       // add recipient Name
-      doc.setFontSize(14);
-      doc.text(`To: ${formData.recipientName}`, 20, 40);
+      // doc.setFontSize(12);
+      // doc.setFontSize(17);
 
       // add Client Name
-      doc.setFontSize(14);
-      doc.text(`To: ${formData.clientName}`, 20, 40);
-
-      // add recipient email
-      doc.setFontSize(14);
-      doc.text(`To: ${formData.recipientEmail}`, 20, 40);
-
-      // add project description
-      doc.setFontSize(14);
-      doc.text(`Project Description: ${formData.projectDescription}`, 20, 50);
-
-      // add issued on
       doc.setFontSize(12);
-      doc.text(`Issued On: ${formData.issuedOn}`, 20, 60);
+      doc.setTextColor('blue')
+      doc.text(`Billed From`, 20, 40);
+      doc.text(`Billed To`, 120, 40);
+      doc.text(`Issued On`, 20, 60);
+      doc.text(`Due On`, 63, 60);
+      doc.text(`Recipiend Add`, 106, 60);
+      doc.text(`Client Add`, 152, 60);
+      doc.text(`Notes`, 20, 170);
 
-      // add due on
-      doc.setFontSize(12);
-      doc.text(`Due On: ${formData.dueOn}`, 105, 60, { align: "right" });
 
-      // add bill from
-      doc.setFontSize(12);
-      doc.text(`From: ${formData.billFrom}`, 20, 70);
+      doc.setFontSize(10);
 
-      // add bill to
-      doc.setFontSize(12);
-      doc.text(`To: ${formData.billTo}`, 105, 70, { align: "right" });
+      doc.text(`DESCRIPTION`, 20, 90);
+      doc.text(`RATE`, 140, 90, { align: "right" });
+      doc.text(`QTY`, 160, 90, { align: "right" });
+      doc.text(`AMOUNT`, 190, 90, { align: "right" });
 
-      // add items
-      doc.setFontSize(12);
-      doc.text("Items", 20, 80);
-      let y = 90;
+
+
+      doc.setTextColor("black");
+
+      doc.setFontSize(17);
+      doc.text(`${formData.recipientName}`, 20, 47);
+      doc.text(`${formData.clientName}`, 120, 47, );
+      doc.text(`${formData.issuedOn}`, 20, 67);
+      doc.text(`${formData.dueOn}`, 63, 67,);
+      doc.text(`${formData.billFrom}`, 106, 67);
+      doc.text(`${formData.billTo}`, 152, 67);
+      doc.text(`${formData.notes}`, 20, 177);
+      let y = 105;
+      let totalAmount = 0
+
+      doc.setTextColor("#5A5A5A");
+      doc.setFontSize(15);
       formData.items.forEach((item) => {
         doc.text(
-          `${item.item}: ${item.quantity} x ${item.price} = ${item.totalPrice} ${formData.currency}`,
+          `${item.item}`,
           20,
           y
         );
+        doc.text(
+          `${item.price}`,
+          140,
+          y, { align: "right" }
+        )
+        ;doc.text(
+          `${item.quantity} `,
+          160,
+          y,{ align: "right" }
+        );
+        doc.text(
+          `${item.totalPrice} ${formData.currency}`,
+          190,
+          y, { align: "right" }
+        );
         y += 10;
+        totalAmount += item.totalPrice
       });
 
-      // add notes
-      doc.setFontSize(12);
-      doc.text(`Notes: ${formData.notes}`, 20, y + 10);
+      doc.setTextColor("black");
+
+      doc.setFontSize(17);
+      doc.text(`Deposit Due`, 110, y+20);
+
+      doc.text(`${totalAmount}`, 190, y + 20, { align: "right" });
+
 
       doc.save("invoice.pdf");
     }, 1000);
@@ -123,7 +147,7 @@ function PreviewPage() {
       <SmallHeading className="mb-[1.2rem] pt-[.4rem] " title="Invoice Items" />
       <div className="border-slate-200 border-2 rounded-[10px]">
         <div className="grid grid-cols-[51%_15%_10%_19%] py-[.4rem] px-[.35rem] text-slate-500 bg-slate-100 ">
-          <Paragraph className="text-[1.2rem]" title="Description" />
+          <Paragraph  title="Description" />
           <Paragraph title="Price" />
           <Paragraph title="Qty" />
           <Paragraph title="Total " />
