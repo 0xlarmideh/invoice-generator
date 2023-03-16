@@ -19,7 +19,6 @@ body {
   min-width: 320px;
   /* max-width: 600px; */
   min-height: 100vh;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .text-black {
