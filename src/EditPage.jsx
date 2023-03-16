@@ -139,55 +139,66 @@ const EditPage = () => {
           />
         </div>
 
-        <label>
+        <div className="flex gap-4 items-center">
+          <label className="text-[1.1rem] font-medium py-[.4rem] text-slate-500">
+            Currency
+          </label>
           <select
             name="currency"
             id="currency"
             value={formData.currency}
             onChange={handleInputChange}
+            className="font-medium my-[.8rem] text-[1rem] py-2 px-4 border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
           >
             {Object.keys(currencies).map((currency) => {
               return <option key={currency}>{currency} </option>;
             })}
           </select>
-        </label>
+        </div>
+
         <SmallHeading title="Invoice Items" className="invoice-items" />
         {formData.items.map((item, index) => (
-          <div key={index} className="grid grid-cols-[51%_15%_10%_19%] gap-2">
-            <InputField
-              title="Item"
-              onChange={(event) => handleItemChange(event, index)}
-              type="text"
-              name="item"
-              value={item.item}
-            />
-            <InputField
-              title="Price"
-              onChange={(event) => handleItemChange(event, index)}
-              type="number"
-              name="price"
-              value={item.price}
-            />
-            <InputField
-              title="Qty"
-              onChange={(event) => handleItemChange(event, index)}
-              type="number"
-              name="quantity"
-              value={item.quantity}
-            />
-            <InputFieldRO
-              title="Total Price"
-              type="number"
-              name="totalPrice"
-              value={item.totalPrice}
-            />
-            <button type="button" onClick={() => removeItem(index)}>
+          <div key={index}>
+            <div className="grid grid-cols-[51%_15%_10%_19%] gap-2">
+              <InputField
+                title="Item"
+                onChange={(event) => handleItemChange(event, index)}
+                type="text"
+                name="item"
+                value={item.item}
+              />
+              <InputField
+                title="Price"
+                onChange={(event) => handleItemChange(event, index)}
+                type="number"
+                name="price"
+                value={item.price}
+              />
+              <InputField
+                title="Qty"
+                onChange={(event) => handleItemChange(event, index)}
+                type="number"
+                name="quantity"
+                value={item.quantity}
+              />
+              <InputFieldRO
+                title="Total"
+                type="number"
+                name="totalPrice"
+                value={item.totalPrice}
+              />
+            </div>
+            <button
+              type="button"
+              className="font-bold text-red-800"
+              onClick={() => removeItem(index)}
+            >
               Remove Item
             </button>
           </div>
         ))}
         <button
-          className="font-bold text-purple-800"
+          className="font-bold text-purple-800 my-[1.4rem]"
           type="button"
           onClick={addItem}
         >
@@ -207,7 +218,5 @@ const EditPage = () => {
     </div>
   );
 }
-
-
 
 export default EditPage

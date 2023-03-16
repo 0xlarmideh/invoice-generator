@@ -14,7 +14,7 @@ function PreviewPage() {
     setLoading(true)
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 3000);
   }, [])
 
   if (!formData) {
@@ -28,61 +28,64 @@ function PreviewPage() {
   };
 
   const handleDownloadClick = () => {
-    const doc = new jsPDF();
-    // add title
-    doc.setFontSize(22);
-    doc.text("Invoice", 105, 20, { align: "center" });
+    navigate('/downloaded')
+    setTimeout(() => {
+      const doc = new jsPDF();
+      // add title
+      doc.setFontSize(22);
+      doc.text("Invoice", 105, 20, { align: "center" });
 
-    // add recipient Name
-    doc.setFontSize(14);
-    doc.text(`To: ${formData.recipientName}`, 20, 40);
+      // add recipient Name
+      doc.setFontSize(14);
+      doc.text(`To: ${formData.recipientName}`, 20, 40);
 
-    // add Client Name
-    doc.setFontSize(14);
-    doc.text(`To: ${formData.clientName}`, 20, 40);
+      // add Client Name
+      doc.setFontSize(14);
+      doc.text(`To: ${formData.clientName}`, 20, 40);
 
-    // add recipient email
-    doc.setFontSize(14);
-    doc.text(`To: ${formData.recipientEmail}`, 20, 40);
+      // add recipient email
+      doc.setFontSize(14);
+      doc.text(`To: ${formData.recipientEmail}`, 20, 40);
 
-    // add project description
-    doc.setFontSize(14);
-    doc.text(`Project Description: ${formData.projectDescription}`, 20, 50);
+      // add project description
+      doc.setFontSize(14);
+      doc.text(`Project Description: ${formData.projectDescription}`, 20, 50);
 
-    // add issued on
-    doc.setFontSize(12);
-    doc.text(`Issued On: ${formData.issuedOn}`, 20, 60);
+      // add issued on
+      doc.setFontSize(12);
+      doc.text(`Issued On: ${formData.issuedOn}`, 20, 60);
 
-    // add due on
-    doc.setFontSize(12);
-    doc.text(`Due On: ${formData.dueOn}`, 105, 60, { align: "right" });
+      // add due on
+      doc.setFontSize(12);
+      doc.text(`Due On: ${formData.dueOn}`, 105, 60, { align: "right" });
 
-    // add bill from
-    doc.setFontSize(12);
-    doc.text(`From: ${formData.billFrom}`, 20, 70);
+      // add bill from
+      doc.setFontSize(12);
+      doc.text(`From: ${formData.billFrom}`, 20, 70);
 
-    // add bill to
-    doc.setFontSize(12);
-    doc.text(`To: ${formData.billTo}`, 105, 70, { align: "right" });
+      // add bill to
+      doc.setFontSize(12);
+      doc.text(`To: ${formData.billTo}`, 105, 70, { align: "right" });
 
-    // add items
-    doc.setFontSize(12);
-    doc.text("Items", 20, 80);
-    let y = 90;
-    formData.items.forEach((item) => {
-      doc.text(
-        `${item.item}: ${item.quantity} x ${item.price} = ${item.totalPrice} ${formData.currency}`,
-        20,
-        y
-      );
-      y += 10;
-    });
+      // add items
+      doc.setFontSize(12);
+      doc.text("Items", 20, 80);
+      let y = 90;
+      formData.items.forEach((item) => {
+        doc.text(
+          `${item.item}: ${item.quantity} x ${item.price} = ${item.totalPrice} ${formData.currency}`,
+          20,
+          y
+        );
+        y += 10;
+      });
 
-    // add notes
-    doc.setFontSize(12);
-    doc.text(`Notes: ${formData.notes}`, 20, y + 10);
+      // add notes
+      doc.setFontSize(12);
+      doc.text(`Notes: ${formData.notes}`, 20, y + 10);
 
-    doc.save("invoice.pdf");
+      doc.save("invoice.pdf");
+    }, 1000);
   };
 
   return loading ? (
