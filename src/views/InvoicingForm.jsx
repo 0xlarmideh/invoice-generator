@@ -8,6 +8,7 @@ import InputFieldRO from '../components/InputFieldRO';
 import TextArea from '../components/TextArea';
 import { Heading, SmallHeading } from '../components/Typography';
 import Button from '../components/Button';
+import { useFormik } from 'formik';
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
@@ -18,21 +19,25 @@ function InvoicingForm() {
     }, 1000);
   }, []);
   const navigate = useNavigate();
-  const [currencies, setCurrencies] = useState(CurrenciesData);
-  const [formData, setFormData] = useState({
-    recipientName: "",
-    recipientEmail: "",
-    clientName: "",
-    projectDescription: "",
-    issuedOn: "",
-    dueOn: "",
-    billFrom: "",
-    billTo: "",
-    currency: "",
-    items: [],
-    notes: "",
+  const [currencies] = useState(CurrenciesData);
+  const formik = useFormik({
+    initialValues: {
+      recipientName: "",
+      recipientEmail: "",
+      clientName: "",
+      projectDescription: "",
+      issuedOn: "",
+      dueOn: "",
+      billFrom: "",
+      billTo: "",
+      currency: "",
+      items: [],
+      notes: "",
+    },
   });
 
+  const [formData, setFormData] = useState(formik.values);
+  console.log(formik)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
