@@ -9,6 +9,7 @@ import TextArea from '../components/TextArea';
 import { Heading, SmallHeading } from '../components/Typography';
 import Button from '../components/Button';
 import { useFormik } from 'formik';
+import {basicSchema} from "../schemas"
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ function InvoicingForm() {
   }, []);
   const navigate = useNavigate();
   const [currencies] = useState(CurrenciesData);
-  const formik = useFormik({
+  const {values, errors} = useFormik({
     initialValues: {
       recipientName: "",
       recipientEmail: "",
@@ -34,10 +35,11 @@ function InvoicingForm() {
       items: [],
       notes: "",
     },
+    validationSchema: basicSchema,
   });
-
-  const [formData, setFormData] = useState(formik.values);
-  console.log(formik)
+console.log
+  const [formData, setFormData] = useState(values);
+  // console.log(formik)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -68,12 +70,21 @@ function InvoicingForm() {
     });
   };
 
+  const itemFormik = useFormik({
+    initialValues: {
+      item: "",
+      price: "",
+      quantity: "",
+      totalPrice: "",
+    },
+  });
+
   const addItem = () => {
     setFormData({
       ...formData,
       items: [
         ...formData.items,
-        { item: "", price: "", quantity: "", totalPrice: "" },
+        itemFormik.values,
       ],
     });
   };
@@ -91,6 +102,9 @@ function InvoicingForm() {
     event.preventDefault();
     navigate("/preview", { state: { formData } });
   };
+
+  // console.log(errors)
+  console.log(errors)
 
   return loading ? (
     <div className="loading-spinner">
