@@ -29,14 +29,18 @@ function PreviewPage() {
 
   // Create two new variables and use it to save data to storage after click
   let new_data = formData;
+  let old_data = []
   let oldData = JSON.parse(localStorage.getItem("savedItems"));
+  if (oldData == undefined){
 
-  let old_data 
+     oldData = null
+  }
   if(oldData){
 
     old_data = oldData
   }
   // Push the current value gotten from location state to the old data
+  old_data.push(new_data);
   const handleDownloadClick = () => {
     console.log(old_data);
     // Update localStorage state
