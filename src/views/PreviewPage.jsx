@@ -37,7 +37,6 @@ function PreviewPage() {
     old_data = oldData
   }
   // Push the current value gotten from location state to the old data
-  old_data.push(new_data);
   const handleDownloadClick = () => {
     console.log(old_data);
     // Update localStorage state
