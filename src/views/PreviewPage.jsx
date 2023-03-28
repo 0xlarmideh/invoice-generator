@@ -9,13 +9,13 @@ function PreviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const formData = location.state?.formData;
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, [])
+  }, []);
 
   if (!formData) {
     navigate("/");
@@ -24,18 +24,36 @@ function PreviewPage() {
 
   const handleEditClick = () => {
     // window.history.back()
-    navigate('/edit', {state: {formData} });
+    navigate("/edit", { state: { formData } });
   };
 
+  // Create two new variables and use it to save data to storage after click
+  let new_data = formData;
+  let oldData = JSON.parse(localStorage.getItem("savedItems"));
+
+  let old_data 
+  if(oldData){
+
+    old_data = oldData
+  }
+  // Push the current value gotten from location state to the old data
+  old_data.push(new_data);
   const handleDownloadClick = () => {
-    navigate('/downloaded')
+    console.log(old_data);
+    // Update localStorage state
+    localStorage.setItem('savedItems', JSON.stringify(old_data))
+
+    // Navigate to download screen 
+    navigate("/downloaded");
     setTimeout(() => {
+
+      // Create document instance
       const doc = new jsPDF();
       doc.setFontSize(33);
       doc.text("Invoice", 105, 20, { align: "center" });
 
       doc.setFontSize(12);
-      doc.setTextColor('blue')
+      doc.setTextColor("blue");
       doc.text(`Billed From`, 20, 40);
       doc.text(`Billed To`, 120, 40);
       doc.text(`Issued On`, 20, 60);
@@ -44,7 +62,6 @@ function PreviewPage() {
       doc.text(`Client Add`, 152, 60);
       doc.text(`Notes`, 20, 170);
 
-
       doc.setFontSize(10);
 
       doc.text(`DESCRIPTION`, 20, 90);
@@ -52,55 +69,38 @@ function PreviewPage() {
       doc.text(`QTY`, 160, 90, { align: "right" });
       doc.text(`AMOUNT`, 190, 90, { align: "right" });
 
-
-
       doc.setTextColor("black");
 
       doc.setFontSize(17);
       doc.text(`${formData.recipientName}`, 20, 47);
-      doc.text(`${formData.clientName}`, 120, 47, );
+      doc.text(`${formData.clientName}`, 120, 47);
       doc.text(`${formData.issuedOn}`, 20, 67);
-      doc.text(`${formData.dueOn}`, 63, 67,);
+      doc.text(`${formData.dueOn}`, 63, 67);
       doc.text(`${formData.billFrom}`, 106, 67);
       doc.text(`${formData.billTo}`, 152, 67);
       doc.text(`${formData.notes}`, 20, 177);
       let y = 105;
-      let totalAmount = 0
+      let totalAmount = 0;
 
       doc.setTextColor("#5A5A5A");
       doc.setFontSize(15);
       formData.items.forEach((item) => {
-        doc.text(
-          `${item.item}`,
-          20,
-          y
-        );
-        doc.text(
-          `${item.price}`,
-          140,
-          y, { align: "right" }
-        )
-        ;doc.text(
-          `${item.quantity} `,
-          160,
-          y,{ align: "right" }
-        );
-        doc.text(
-          `${item.totalPrice} ${formData.currency}`,
-          190,
-          y, { align: "right" }
-        );
+        doc.text(`${item.item}`, 20, y);
+        doc.text(`${item.price}`, 140, y, { align: "right" });
+        doc.text(`${item.quantity} `, 160, y, { align: "right" });
+        doc.text(`${item.totalPrice} ${formData.currency}`, 190, y, {
+          align: "right",
+        });
         y += 10;
-        totalAmount += item.totalPrice
+        totalAmount += item.totalPrice;
       });
 
       doc.setTextColor("black");
 
       doc.setFontSize(17);
-      doc.text(`Deposit Due`, 110, y+20);
+      doc.text(`Deposit Due`, 110, y + 20);
 
       doc.text(`${totalAmount}`, 190, y + 20, { align: "right" });
-
 
       doc.save("invoice.pdf");
     }, 1500);
@@ -141,7 +141,7 @@ function PreviewPage() {
       <SmallHeading className="mb-[1.2rem] pt-[.4rem] " title="Invoice Items" />
       <div className="border-slate-200 border-2 rounded-[10px]">
         <div className="grid grid-cols-[51%_15%_10%_19%] py-[.4rem] px-[.35rem] text-slate-500 bg-slate-100 ">
-          <Paragraph  title="Description" />
+          <Paragraph title="Description" />
           <Paragraph title="Price" />
           <Paragraph title="Qty" />
           <Paragraph title="Total " />
@@ -186,7 +186,6 @@ function PreviewPage() {
       </div>
     </div>
   );
-  
 }
 
 export default PreviewPage;
