@@ -1,5 +1,5 @@
 // InvoicingForm.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CurrenciesData from "../../currencies.json";
 import InputFieldFormik from "../components/InputFieldFormik";
@@ -7,7 +7,7 @@ import InputFieldRO from "../components/InputFieldRO";
 import TextArea from "../components/TextArea";
 import { Heading, SmallHeading } from "../components/Typography";
 import Button from "../components/Button";
-import { Form, Formik, FieldArray } from "formik";
+import { Form, Formik, FieldArray, ErrorMessage } from "formik";
 import { basicSchema } from "../schemas";
 import SelectField from "../components/Select";
 
@@ -22,6 +22,7 @@ function InvoicingForm() {
     recipientName: "",
     recipientEmail: "",
     clientName: "",
+    clientEmail: "",
     projectDescription: "",
     issuedOn: "",
     dueOn: "",
@@ -31,6 +32,7 @@ function InvoicingForm() {
     items: [
       {
         item: "",
+        desc: "",
         price: "",
         quantity: "",
         totalPrice: "",
@@ -47,6 +49,7 @@ function InvoicingForm() {
   if (sData){
     initFormik = sData
   }
+
   useEffect(() => {
     // console.log(oldData);
     setLoading(true);
@@ -84,10 +87,10 @@ function InvoicingForm() {
                   key={index}
                   // Set savedData to current item
                   onClick={() => {
-                    savedData = item
+                    savedData = item;
 
                     // Update formValues state
-                    setFormValues(savedData)
+                    setFormValues(savedData);
                     console.log(savedData);
                   }}
                 >
@@ -115,6 +118,7 @@ function InvoicingForm() {
             onSubmit={(event) => {
               event.preventDefault();
               setFormData(values);
+              console.log(errors);
             }}
           >
             <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
@@ -131,12 +135,19 @@ function InvoicingForm() {
                 name="recipientEmail"
               />
             </div>
+            <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
+              <InputFieldFormik
+                title="Client name"
+                type="text"
+                name="clientName"
+              />
+              <InputFieldFormik
+                title="Client email"
+                type="email"
+                name="clientEmail"
+              />
+            </div>
 
-            <InputFieldFormik
-              title="Client name"
-              type="text"
-              name="clientName"
-            />
             <InputFieldFormik
               title="Project Description"
               type="text"
@@ -159,10 +170,14 @@ function InvoicingForm() {
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className="grid grid-cols-[51%_15%_10%_19%] gap-2">
+                      <div className="grid grid-cols-[25%_39%_10%_10%_10%] gap-2">
                         <InputFieldFormik
                           name={`items.${index}.item`}
                           title="Item"
+                        />
+                        <InputFieldFormik
+                          name={`items.${index}.desc`}
+                          title="Desc"
                         />
                         <InputFieldFormik
                           name={`items.${index}.price`}
@@ -175,7 +190,6 @@ function InvoicingForm() {
                         <InputFieldFormik
                           name={`items.${index}.totalPrice`}
                           title="Total"
-                          value={item.price * item.quantity}
                         />
                       </div>
                       <button
@@ -208,7 +222,15 @@ function InvoicingForm() {
                 </div>
               )}
             </FieldArray>
-            <Button type="submit" title="Preview" onClick={() => sessionStorage.setItem("sessionData", JSON.stringify(values) )} className="bg-purple-800" />
+            <Button
+              type="submit"
+              title="Preview"
+              onClick={() => {
+                sessionStorage.setItem("sessionData", JSON.stringify(values));
+                console.log({ errors });
+              }}
+              className="bg-purple-800"
+            />
             {/* <pre>{JSON.stringify({ values, errors }, null, 4)} </pre> */}
           </Form>
         )}

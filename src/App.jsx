@@ -5,7 +5,7 @@ import HomePage from "./views/HomePage";
 // import InvoicingForm from "./views/InvoicingForm";
 import InvoicingForm from "./views/InvoicingForm";
 import InvoicingFormRef from "./views/InvoicingForm_REF";
-import PreviewPage from "./views/PreviewPage";
+import Preview from "./views/Preview";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/invoice" element={<InvoicingFormRef />}></Route>
         <Route path="/downloaded" element={<Downloaded />}></Route>
-        <Route path="/preview" element={<PreviewPage />}></Route>
+        <Route path="/preview" element={<Preview />}></Route>
       </Routes>
     </BrowserRouter>
   );
