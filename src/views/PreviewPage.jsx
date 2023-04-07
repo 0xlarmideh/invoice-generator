@@ -5,6 +5,7 @@ import Button from "../components/Button";
 
 import jsPDF from "jspdf";
 
+
 function PreviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,6 +60,8 @@ function PreviewPage() {
       doc.setTextColor("blue");
       doc.text(`Billed From`, 20, 40);
       doc.text(`Billed To`, 120, 40);
+      doc.setFillColor("yellow")
+      doc.fillRect(20, 100, 20, 60);
       doc.text(`Issued On`, 20, 60);
       doc.text(`Due On`, 63, 60);
       doc.text(`Recipiend Add`, 106, 60);

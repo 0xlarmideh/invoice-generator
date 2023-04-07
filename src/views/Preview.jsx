@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Heading, SmallHeading, Paragraph } from "../components/Typography";
 import Button from "../components/Button";
+import jsPDFInvoiceTemplate from "../components/jsPDFTemplate";
+import { OutputType, jsPDF } from "../components/outputType";
+// import jsPDF from "jspdf";
 
 // import jsPDF from "jspdf";
-import jsPDFInvoiceTemplate, {
-  OutputType,
-  jsPDF,
-} from "jspdf-invoice-template";
+// import jsPDFInvoiceTemplate, {
+//   OutputType,
+//   jsPDF,
+// } from "jspdf-invoice-template";
 
 function Preview() {
   const navigate = useNavigate();
@@ -58,16 +61,6 @@ function Preview() {
     fileName: "Invoice",
     orientationLandscape: false,
     compress: true,
-    logo: {
-      src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
-      type: "PNG", //optional, when src= data:uri (nodejs case)
-      width: 53.33, //aspect ratio = width/height
-      height: 26.66,
-      margin: {
-        top: 0, //negative or positive num, from the current position
-        left: 0, //negative or positive num, from the current position
-      },
-    },
     stamp: {
       inAllPages: true, //by default = false, just in the last page
       src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
