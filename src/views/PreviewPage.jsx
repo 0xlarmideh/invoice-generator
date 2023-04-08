@@ -24,7 +24,7 @@ function PreviewPage() {
 
   const handleEditClick = () => {
     // window.history.back()
-    navigate("/edit", { state: { formData } });
+    navigate("/invoice");
   };
 
   // Create two new variables and use it to save data to storage after click

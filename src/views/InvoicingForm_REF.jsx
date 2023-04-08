@@ -17,10 +17,36 @@ function InvoicingForm() {
   const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null)
+  const [sessionData, setSessionData] = useState(null)
+  let initFormik = {
+    recipientName: "",
+    recipientEmail: "",
+    clientName: "",
+    projectDescription: "",
+    issuedOn: "",
+    dueOn: "",
+    billFrom: "",
+    billTo: "",
+    currency: "",
+    items: [
+      {
+        item: "",
+        price: "",
+        quantity: "",
+        totalPrice: "",
+      },
+    ],
+    notes: "",
+  };
+
+
   // const [savedData, setSavedData] = useState(null);
   let oldData 
   oldData = JSON.parse(localStorage.getItem("savedItems"));
-
+  let sData = JSON.parse(sessionStorage.getItem("sessionData"));
+  if (sData){
+    initFormik = sData
+  }
   useEffect(() => {
     // console.log(oldData);
     setLoading(true);
@@ -79,26 +105,7 @@ function InvoicingForm() {
       </div>
       <Formik
         // Use formValues or default state values for form
-        initialValues={formValues || {
-          recipientName: "",
-          recipientEmail: "",
-          clientName: "",
-          projectDescription: "",
-          issuedOn: "",
-          dueOn: "",
-          billFrom: "",
-          billTo: "",
-          currency: "",
-          items: [
-            {
-              item: "",
-              price: "",
-              quantity: "",
-              totalPrice: "",
-            },
-          ],
-          notes: "",
-        }}
+        initialValues={formValues || initFormik}
         validationSchema={basicSchema}
         enableReinitialize
       >
@@ -117,7 +124,7 @@ function InvoicingForm() {
                 name="recipientName"
                 className={"text-black"}
               />
-              {errors.recipientName ? <div>{errors.recipientName} </div> : null}
+              {/* {errors.recipientName ? <div>{errors.recipientName} </div> : null} */}
               <InputFieldFormik
                 title="Recipient email"
                 type="email"
@@ -201,7 +208,7 @@ function InvoicingForm() {
                 </div>
               )}
             </FieldArray>
-            <Button type="submit" title="Preview" className="bg-purple-800" />
+            <Button type="submit" title="Preview" onClick={() => sessionStorage.setItem("sessionData", JSON.stringify(values) )} className="bg-purple-800" />
             {/* <pre>{JSON.stringify({ values, errors }, null, 4)} </pre> */}
           </Form>
         )}
