@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Heading, SmallHeading, Paragraph } from "../components/Typography";
 import Button from "../components/Button";
+import jsPDFInvoiceTemplate from "../components/jsPDFTemplate";
+import { OutputType, jsPDF } from "../components/outputType";
+// import jsPDF from "jspdf";
 
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
+// import jsPDFInvoiceTemplate, {
+//   OutputType,
+//   jsPDF,
+// } from "jspdf-invoice-template";
 
-function PreviewPage() {
+function Preview() {
   const navigate = useNavigate();
   const location = useLocation();
   const formData = location.state?.formData;
@@ -27,85 +34,133 @@ function PreviewPage() {
     navigate("/invoice");
   };
 
+  let number = 0;
+  let totalAmount = 0;
+  formData.items.forEach((item) => {
+    number += 1;
+    totalAmount += item.totalPrice;
+  });
+
   // Create two new variables and use it to save data to storage after click
   let new_data = formData;
-  let old_data = []
+  let old_data = [];
   let oldData = JSON.parse(localStorage.getItem("savedItems"));
-  if (oldData == undefined){
-
-     oldData = null
+  if (oldData == undefined) {
+    oldData = null;
   }
-  if(oldData){
-
-    old_data = oldData
+  if (oldData) {
+    old_data = oldData;
   }
   // Push the current value gotten from location state to the old data
   old_data.push(new_data);
-  const handleDownloadClick = () => {
-    console.log(old_data);
-    // Update localStorage state
-    localStorage.setItem('savedItems', JSON.stringify(old_data))
 
-    // Navigate to download screen 
+  // PDF Section
+  var props = {
+    outputType: OutputType.Save,
+    returnJsPDFDocObject: true,
+    fileName: "Invoice",
+    orientationLandscape: false,
+    compress: true,
+    stamp: {
+      inAllPages: true, //by default = false, just in the last page
+      src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
+      type: "JPG", //optional, when src= data:uri (nodejs case)
+      width: 20, //aspect ratio = width/height
+      height: 20,
+      margin: {
+        top: 0, //negative or positive num, from the current position
+        left: 0, //negative or positive num, from the current position
+      },
+    },
+
+    business: {
+      label: "Invoice issued from:",
+      name: `${formData.recipientName}`,
+      address: `${formData.billFrom}`,
+      email: `${formData.recipientEmail}`,
+    },
+
+    contact: {
+      label: "Invoice issued for:",
+      name: `${formData.clientName}`,
+      address: `${formData.billTo}`,
+      email: `${formData.clientEmail}`,
+    },
+
+    invoice: {
+      label: `Invoice #: `,
+      num: `${formData.invoiceNumber}`,
+      invDate: `${formData.issuedOn}`,
+      invGenDate: `${formData.dueDate}`,
+      headerBorder: false,
+      tableBodyBorder: false,
+      header: [
+        {
+          title: "#",
+          style: {
+            width: 10,
+          },
+        },
+        {
+          title: "Title",
+          style: {
+            width: 30,
+          },
+        },
+        {
+          title: "Description",
+          style: {
+            width: 80,
+          },
+        },
+        { title: "Price" },
+        { title: "Quantity" },
+        // { title: "Unit" },
+        { title: "Total" },
+      ],
+      table: Array.from(Array(number), (item, index) => [
+        index + 1,
+        `${formData.items[index].item}`,
+        `${formData.items[index].desc}`,
+        `${formData.items[index].price} `,
+        `${formData.items[index].quantity}`,
+        `${formData.items[index].totalPrice} ${formData.currency}`,
+      ]),
+      additionalRows: [
+        {
+          col1: "Total:",
+          col2: `${totalAmount} ${formData.currency}`,
+          col3: "ALL",
+          style: {
+            fontSize: 14, //optional, default 12
+          },
+        },
+      ],
+      invDescLabel: "Invoice Note",
+      invDesc: `${formData?.notes}`,
+    },
+    footer: {
+      text: "The invoice is created on a computer and is valid without the signature and stamp.",
+    },
+    pageEnable: true,
+    pageLabel: "Page ",
+  };
+
+  // Save Preset
+  const savePreset = () => {
+    // Update localStorage state
+    localStorage.setItem("savedItems", JSON.stringify(old_data));
+  };
+
+  const handleDownloadClick = () => {
+    var pdfObject = jsPDFInvoiceTemplate(props);
+    // pdfObject.blob;
+    pdfObject.jsPDFDocObject.save();
+
+    // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
 
-      // Create document instance
-      const doc = new jsPDF();
-      doc.setFontSize(33);
-      doc.text("Invoice", 105, 20, { align: "center" });
-
-      doc.setFontSize(12);
-      doc.setTextColor("blue");
-      doc.text(`Billed From`, 20, 40);
-      doc.text(`Billed To`, 120, 40);
-      doc.text(`Issued On`, 20, 60);
-      doc.text(`Due On`, 63, 60);
-      doc.text(`Recipiend Add`, 106, 60);
-      doc.text(`Client Add`, 152, 60);
-      doc.text(`Notes`, 20, 170);
-
-      doc.setFontSize(10);
-
-      doc.text(`DESCRIPTION`, 20, 90);
-      doc.text(`RATE`, 140, 90, { align: "right" });
-      doc.text(`QTY`, 160, 90, { align: "right" });
-      doc.text(`AMOUNT`, 190, 90, { align: "right" });
-
-      doc.setTextColor("black");
-
-      doc.setFontSize(17);
-      doc.text(`${formData.recipientName}`, 20, 47);
-      doc.text(`${formData.clientName}`, 120, 47);
-      doc.text(`${formData.issuedOn}`, 20, 67);
-      doc.text(`${formData.dueOn}`, 63, 67);
-      doc.text(`${formData.billFrom}`, 106, 67);
-      doc.text(`${formData.billTo}`, 152, 67);
-      doc.text(`${formData.notes}`, 20, 177);
-      let y = 105;
-      let totalAmount = 0;
-
-      doc.setTextColor("#5A5A5A");
-      doc.setFontSize(15);
-      formData.items.forEach((item) => {
-        doc.text(`${item.item}`, 20, y);
-        doc.text(`${item.price}`, 140, y, { align: "right" });
-        doc.text(`${item.quantity} `, 160, y, { align: "right" });
-        doc.text(`${item.totalPrice} ${formData.currency}`, 190, y, {
-          align: "right",
-        });
-        y += 10;
-        totalAmount += item.totalPrice;
-      });
-
-      doc.setTextColor("black");
-
-      doc.setFontSize(17);
-      doc.text(`Deposit Due`, 110, y + 20);
-
-      doc.text(`${totalAmount}`, 190, y + 20, { align: "right" });
-
-      doc.save("invoice.pdf");
     }, 1500);
   };
 
@@ -116,7 +171,7 @@ function PreviewPage() {
   ) : (
     <div>
       <Heading
-        title="Invoice Preview"
+        title={"Invoice " + `[${formData.invoiceNumber}]` + " Preview"}
         className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
       />
       <div className="flex gap-6 mb-[1rem]">
@@ -171,6 +226,10 @@ function PreviewPage() {
           className="text-slate-500 text-[1rem]"
           title="Total Amount"
         />
+        <SmallHeading
+          className="text-slate-500 text-[1rem]"
+          title={`${totalAmount }` + " " +  `${formData.currency}`}
+        />
         {/* <SmallHeading title={`${form}`} /> */}
       </div>
 
@@ -182,13 +241,18 @@ function PreviewPage() {
           className="bg-slate-600"
         />
         <Button
+          onClick={savePreset}
+          title="Save Preset"
+          className="bg-purple-800 "
+        />
+        <Button
           onClick={handleDownloadClick}
           title="Download PDF"
-          className="bg-purple-800"
+          className="bg-green-600"
         />
       </div>
     </div>
   );
 }
 
-export default PreviewPage;
+export default Preview;

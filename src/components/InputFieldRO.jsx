@@ -12,7 +12,7 @@ const InputFieldRO = ({title, type, name, value, onChange}) => {
         value={value}
         onChange={onChange}
         readOnly
-        className="font-medium text-[.9rem] py-2 px-4 border-[2px] border-slate-200 bg-slate-100 outline-none  rounded-[10px] "
+        className="font-medium text-[.9rem] py-2 px-2 border-[2px] border-slate-200 bg-slate-100 outline-none  rounded-[10px] "
       />
     </div>
   );
