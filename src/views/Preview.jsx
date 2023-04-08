@@ -37,7 +37,7 @@ function Preview() {
   let number = 0;
   let totalAmount = 0;
   formData.items.forEach((item) => {
-    number += 1
+    number += 1;
     totalAmount += item.totalPrice;
   });
 
@@ -74,6 +74,7 @@ function Preview() {
     },
 
     business: {
+      label: "Invoice issued from:",
       name: `${formData.recipientName}`,
       address: `${formData.billFrom}`,
       email: `${formData.recipientEmail}`,
@@ -121,39 +122,22 @@ function Preview() {
         index + 1,
         `${formData.items[index].item}`,
         `${formData.items[index].desc}`,
-        `${formData.items[index].price}`,
+        `${formData.items[index].price} `,
         `${formData.items[index].quantity}`,
-        `${formData.items[index].totalPrice}`,
+        `${formData.items[index].totalPrice} ${formData.currency}`,
       ]),
       additionalRows: [
         {
           col1: "Total:",
-          col2: `${totalAmount}`,
+          col2: `${totalAmount} ${formData.currency}`,
           col3: "ALL",
           style: {
             fontSize: 14, //optional, default 12
           },
         },
-        {
-          col1: "VAT:",
-          col2: "20",
-          col3: "%",
-          style: {
-            fontSize: 10, //optional, default 12
-          },
-        },
-        {
-          col1: "SubTotal:",
-          col2: "116,199.90",
-          col3: "ALL",
-          style: {
-            fontSize: 10, //optional, default 12
-          },
-        },
       ],
       invDescLabel: "Invoice Note",
-      invDesc:
-        "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+      invDesc: `${formData?.notes}`,
     },
     footer: {
       text: "The invoice is created on a computer and is valid without the signature and stamp.",
@@ -162,20 +146,21 @@ function Preview() {
     pageLabel: "Page ",
   };
 
+  // Save Preset
+  const savePreset = () => {
+    // Update localStorage state
+    localStorage.setItem("savedItems", JSON.stringify(old_data));
+  };
 
   const handleDownloadClick = () => {
     var pdfObject = jsPDFInvoiceTemplate(props);
-    pdfObject.blob;
+    // pdfObject.blob;
     pdfObject.jsPDFDocObject.save();
-    console.log("Created", pdfObject)
-    // console.log(old_data);
-    // Update localStorage state
-    localStorage.setItem("savedItems", JSON.stringify(old_data));
 
     // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
-      // Create PDF instance with template
+
     }, 1500);
   };
 
@@ -252,9 +237,14 @@ function Preview() {
           className="bg-slate-600"
         />
         <Button
+          onClick={savePreset}
+          title="Save Preset"
+          className="bg-purple-800 "
+        />
+        <Button
           onClick={handleDownloadClick}
           title="Download PDF"
-          className="bg-purple-800"
+          className="bg-green-600"
         />
       </div>
     </div>

@@ -16,8 +16,7 @@ function InvoicingForm() {
   const navigate = useNavigate();
   const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
-  const [formValues, setFormValues] = useState(null)
-  const [sessionData, setSessionData] = useState(null)
+  const [formValues, setFormValues] = useState(null);
   let initFormik = {
     recipientName: "",
     recipientEmail: "",
@@ -41,13 +40,12 @@ function InvoicingForm() {
     notes: "",
   };
 
-
   // const [savedData, setSavedData] = useState(null);
-  let oldData 
+  let oldData;
   oldData = JSON.parse(localStorage.getItem("savedItems"));
   let sData = JSON.parse(sessionStorage.getItem("sessionData"));
-  if (sData){
-    initFormik = sData
+  if (sData) {
+    initFormik = sData;
   }
 
   useEffect(() => {
@@ -113,7 +111,7 @@ function InvoicingForm() {
         enableReinitialize
       >
         {/* Deconstruct props from Formik  */}
-        {({ values, errors, actions, isSubmitting }) => (
+        {({ values, errors, actions, setFieldValue }) => (
           <Form
             onSubmit={(event) => {
               event.preventDefault();
@@ -128,7 +126,6 @@ function InvoicingForm() {
                 name="recipientName"
                 className={"text-black"}
               />
-              {/* {errors.recipientName ? <div>{errors.recipientName} </div> : null} */}
               <InputFieldFormik
                 title="Recipient email"
                 type="email"
@@ -178,6 +175,7 @@ function InvoicingForm() {
                         <InputFieldFormik
                           name={`items.${index}.desc`}
                           title="Desc"
+                          type="text"
                         />
                         <InputFieldFormik
                           name={`items.${index}.price`}
@@ -187,8 +185,13 @@ function InvoicingForm() {
                           name={`items.${index}.quantity`}
                           title="Qty"
                         />
-                        <InputFieldFormik
+                        <InputFieldRO
                           name={`items.${index}.totalPrice`}
+                          value={
+                            (item.totalPrice = parseFloat(
+                              item.price * item.quantity
+                            ))
+                          }
                           title="Total"
                         />
                       </div>
@@ -205,11 +208,12 @@ function InvoicingForm() {
                     </div>
                   ))}
                   <button
-                    className="font-bold text-purple-800 my-[1.4rem]"
+                    className="font-bold text-purple-800 mt-[1.4rem]"
                     type="button"
                     onClick={(e) => {
                       push({
                         item: "",
+                        desc: "",
                         price: "",
                         quantity: "",
                         totalPrice: "",
@@ -222,6 +226,10 @@ function InvoicingForm() {
                 </div>
               )}
             </FieldArray>
+            <div className="mb-[1.4rem]">
+              <InputFieldFormik title="Notes" name="notes" />
+            </div>
+
             <Button
               type="submit"
               title="Preview"
@@ -231,7 +239,6 @@ function InvoicingForm() {
               }}
               className="bg-purple-800"
             />
-            {/* <pre>{JSON.stringify({ values, errors }, null, 4)} </pre> */}
           </Form>
         )}
       </Formik>
