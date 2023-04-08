@@ -88,8 +88,8 @@ function Preview() {
     },
 
     invoice: {
-      label: "Invoice #: ",
-      num: 19,
+      label: `Invoice #: `,
+      num: `${formData.invoiceNumber}`,
       invDate: `${formData.issuedOn}`,
       invGenDate: `${formData.dueDate}`,
       headerBorder: false,
@@ -171,7 +171,7 @@ function Preview() {
   ) : (
     <div>
       <Heading
-        title="Invoice Preview"
+        title={"Invoice " + `[${formData.invoiceNumber}]` + " Preview"}
         className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
       />
       <div className="flex gap-6 mb-[1rem]">
@@ -225,6 +225,10 @@ function Preview() {
         <SmallHeading
           className="text-slate-500 text-[1rem]"
           title="Total Amount"
+        />
+        <SmallHeading
+          className="text-slate-500 text-[1rem]"
+          title={`${totalAmount }` + " " +  `${formData.currency}`}
         />
         {/* <SmallHeading title={`${form}`} /> */}
       </div>

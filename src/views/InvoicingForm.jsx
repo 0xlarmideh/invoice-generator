@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import CurrenciesData from "../../currencies.json";
 import InputFieldFormik from "../components/InputFieldFormik";
 import InputFieldRO from "../components/InputFieldRO";
-import TextArea from "../components/TextArea";
 import { Heading, SmallHeading } from "../components/Typography";
 import Button from "../components/Button";
 import { Form, Formik, FieldArray, ErrorMessage } from "formik";
@@ -18,6 +17,7 @@ function InvoicingForm() {
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null);
   let initFormik = {
+    invoiceNumber: "",
     recipientName: "",
     recipientEmail: "",
     clientName: "",
@@ -119,6 +119,12 @@ function InvoicingForm() {
               console.log(errors);
             }}
           >
+            <InputFieldFormik
+              title="Invoice Number"
+              type="text"
+              name="invoiceNumber"
+              className={"text-black"}
+            />
             <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
               <InputFieldFormik
                 title="Recipient name"
@@ -167,7 +173,7 @@ function InvoicingForm() {
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className="grid grid-cols-[25%_39%_10%_10%_10%] gap-2">
+                      <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2">
                         <InputFieldFormik
                           name={`items.${index}.item`}
                           title="Item"
