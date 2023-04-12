@@ -1,111 +1,70 @@
-
 // InvoicingForm.js
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CurrenciesData from '../../currencies.json'
-import InputField from '../components/InputField';
-import InputFieldRO from '../components/InputFieldRO';
-import TextArea from '../components/TextArea';
-import { Heading, SmallHeading } from '../components/Typography';
-import Button from '../components/Button';
-import { useFormik } from 'formik';
-import {basicSchema} from "../schemas"
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import CurrenciesData from "../../currencies.json";
+import InputFieldFormik from "../components/InputFieldFormik";
+import InputFieldRO from "../components/InputFieldRO";
+import { Heading, SmallHeading } from "../components/Typography";
+import Button from "../components/Button";
+import { Form, Formik, FieldArray, ErrorMessage } from "formik";
+import { basicSchema } from "../schemas";
+import SelectField from "../components/Select";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [currencies] = useState(CurrenciesData);
+  const [formData, setFormData] = useState(null);
+  const [formValues, setFormValues] = useState(null);
+  let initFormik = {
+    invoiceNumber: "",
+    recipientName: "",
+    recipientEmail: "",
+    clientName: "",
+    clientEmail: "",
+    projectDescription: "",
+    issuedOn: "",
+    dueOn: "",
+    billFrom: "",
+    billTo: "",
+    currency: "",
+    items: [
+      {
+        item: "",
+        desc: "",
+        price: "",
+        quantity: "",
+        totalPrice: "",
+      },
+    ],
+    notes: "",
+  };
+
+  // const [savedData, setSavedData] = useState(null);
+  let oldData;
+  oldData = JSON.parse(localStorage.getItem("savedItems"));
+  let sData = JSON.parse(sessionStorage.getItem("sessionData"));
+  if (sData) {
+    initFormik = sData;
+  }
+
   useEffect(() => {
+    // console.log(oldData);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, []);
-  const navigate = useNavigate();
-  const [currencies] = useState(CurrenciesData);
-  const {values, errors} = useFormik({
-    initialValues: {
-      recipientName: "",
-      recipientEmail: "",
-      clientName: "",
-      projectDescription: "",
-      issuedOn: "",
-      dueOn: "",
-      billFrom: "",
-      billTo: "",
-      currency: "",
-      items: [],
-      notes: "",
-    },
-    validationSchema: basicSchema,
-  });
-console.log
-  const [formData, setFormData] = useState(values);
-  // console.log(formik)
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
-  // Update input fields for Quantity, Price and Total Price
-  const handleItemChange = (event, index) => {
-    const { name, value } = event.target;
-    const items = [...formData.items];
-    const item = items[index];
-
-    if (name === "price" || name === "quantity") {
-      item[name] = parseFloat(value);
-      item.totalPrice = item.price * item.quantity;
-    } else {
-      item[name] = value;
+    if (formData) {
+      console.log(formData);
+      navigate("/preview", { state: { formData } });
     }
+  }, [formData]);
 
-    const totalPrice = items.reduce((acc, item) => acc + item.totalPrice, 0);
+  // Initialize savedData variable to store clicked preset
+  let savedData;
 
-    setFormData({
-      ...formData,
-      items,
-      totalPrice,
-    });
-  };
-
-  const itemFormik = useFormik({
-    initialValues: {
-      item: "",
-      price: "",
-      quantity: "",
-      totalPrice: "",
-    },
-  });
-
-  const addItem = () => {
-    setFormData({
-      ...formData,
-      items: [
-        ...formData.items,
-        itemFormik.values,
-      ],
-    });
-  };
-
-  const removeItem = (index) => {
-    const items = [...formData.items];
-    items.splice(index, 1);
-    setFormData({
-      ...formData,
-      items,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    navigate("/preview", { state: { formData } });
-  };
-
-  // console.log(errors)
-  console.log(errors)
-
+  // Show loading screen
   return loading ? (
     <div className="loading-spinner">
       <span className="loader"></span>
@@ -116,146 +75,179 @@ console.log
         title="Create New Invoice"
         className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
       />
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
-          <InputField
-            title="Recipient name"
-            onChange={handleInputChange}
-            type="text"
-            name="recipientName"
-            value={formData.recipientName}
-            className={"text-black"}
-          />
-          <InputField
-            title="Recipient email"
-            onChange={handleInputChange}
-            type="email"
-            name="recipientEmail"
-            value={formData.recipientEmail}
-          />
-        </div>
+      {/* Map over local storage items */}
+      <div>
+        {oldData && (
+          <div className="flex gap-2 mb-4 ">
+            {oldData.map((item, index) => {
+              return (
+                <button
+                  key={index}
+                  // Set savedData to current item
+                  onClick={() => {
+                    savedData = item;
 
-        <InputField
-          title="Client name"
-          onChange={handleInputChange}
-          type="text"
-          name="clientName"
-          value={formData.clientName}
-        />
-        <InputField
-          title="Project Description"
-          onChange={handleInputChange}
-          type="text"
-          name="projectDescription"
-          value={formData.projectDescription}
-        />
-        <div className="grid grid-cols-2 gap-[10px] rounded-[10px] ">
-          <InputField
-            title="Issued On"
-            onChange={handleInputChange}
-            type="date"
-            name="issuedOn"
-            value={formData.issuedOn}
-          />
-          <InputField
-            title="Due On"
-            onChange={handleInputChange}
-            type="date"
-            name="dueOn"
-            value={formData.dueOn}
-          />
-          <InputField
-            title="Bill From"
-            onChange={handleInputChange}
-            type="text"
-            name="billFrom"
-            value={formData.billFrom}
-          />
-          <InputField
-            title="Bill To"
-            onChange={handleInputChange}
-            type="text"
-            name="billTo"
-            value={formData.billTo}
-          />
-        </div>
-
-        <div className="flex gap-4 items-center">
-          <label className="text-[1.1rem] font-medium py-[.4rem] text-slate-500">
-            Currency
-          </label>
-          <select
-            name="currency"
-            id="currency"
-            value={formData.currency}
-            onChange={handleInputChange}
-            className="font-medium my-[.8rem] text-[1rem] py-2 px-4 border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
-          >
-            {Object.keys(currencies).map((currency) => {
-              return <option key={currency}>{currency} </option>;
+                    // Update formValues state
+                    setFormValues(savedData);
+                    console.log(savedData);
+                  }}
+                >
+                  <div className="card border-2 p-4 rounded-[10px] ">
+                    <h2 className="font-bold text-[20px] ">
+                      {item.clientName}{" "}
+                    </h2>
+                    <p>{item.recipientName} </p>
+                  </div>
+                </button>
+              );
             })}
-          </select>
-        </div>
-
-        <SmallHeading title="Invoice Items" className="invoice-items" />
-        {formData.items.map((item, index) => (
-          <div key={index}>
-            <div className="grid grid-cols-[51%_15%_10%_19%] gap-2">
-              <InputField
-                title="Item"
-                onChange={(event) => handleItemChange(event, index)}
+          </div>
+        )}
+      </div>
+      <Formik
+        // Use formValues or default state values for form
+        initialValues={formValues || initFormik}
+        validationSchema={basicSchema}
+        enableReinitialize
+      >
+        {/* Deconstruct props from Formik  */}
+        {({ values, errors, actions, setFieldValue }) => (
+          <Form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setFormData(values);
+              console.log(errors);
+            }}
+          >
+            <InputFieldFormik
+              title="Invoice Number"
+              type="text"
+              name="invoiceNumber"
+              className={"text-black"}
+            />
+            <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
+              <InputFieldFormik
+                title="Recipient name"
                 type="text"
-                name="item"
-                value={item.item}
+                name="recipientName"
+                className={"text-black"}
               />
-              <InputField
-                title="Price"
-                onChange={(event) => handleItemChange(event, index)}
-                type="number"
-                name="price"
-                value={item.price}
-              />
-              <InputField
-                title="Qty"
-                onChange={(event) => handleItemChange(event, index)}
-                type="number"
-                name="quantity"
-                value={item.quantity}
-              />
-              <InputFieldRO
-                title="Total"
-                type="number"
-                name="totalPrice"
-                value={item.totalPrice}
+              <InputFieldFormik
+                title="Recipient email"
+                type="email"
+                name="recipientEmail"
               />
             </div>
-            <button
-              type="button"
-              className="font-bold text-red-800"
-              onClick={() => removeItem(index)}
-            >
-              Remove Item
-            </button>
-          </div>
-        ))}
-        <button
-          className="font-bold text-purple-800 my-[1.4rem]"
-          type="button"
-          onClick={addItem}
-        >
-          + Add Item
-        </button>
-        <TextArea
-          title="Additional Notes"
-          type="text"
-          name="notes"
-          value={formData.notes}
-          onChange={handleInputChange}
-        />
-        <div className="py-[2rem]">
-          <Button type="submit" title="Preview" className="bg-purple-800" />
-        </div>
-      </form>
+            <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
+              <InputFieldFormik
+                title="Client name"
+                type="text"
+                name="clientName"
+              />
+              <InputFieldFormik
+                title="Client email"
+                type="email"
+                name="clientEmail"
+              />
+            </div>
+
+            <InputFieldFormik
+              title="Project Description"
+              type="text"
+              name="projectDescription"
+            />
+            <div className="grid grid-cols-2 gap-[10px] rounded-[10px] ">
+              <InputFieldFormik title="Issued On" type="date" name="issuedOn" />
+              <InputFieldFormik title="Due On" type="date" name="dueOn" />
+              <InputFieldFormik title="Bill From" type="text" name="billFrom" />
+              <InputFieldFormik title="Bill To" type="text" name="billTo" />
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <SelectField title="Currency" name="currency" obj={currencies} />
+            </div>
+
+            <SmallHeading title="Invoice Items" className="invoice-items" />
+            <FieldArray name="items">
+              {({ push, remove }) => (
+                <div>
+                  {values.items.map((item, index) => (
+                    <div key={index}>
+                      <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2">
+                        <InputFieldFormik
+                          name={`items.${index}.item`}
+                          title="Item"
+                        />
+                        <InputFieldFormik
+                          name={`items.${index}.desc`}
+                          title="Desc"
+                          type="text"
+                        />
+                        <InputFieldFormik
+                          name={`items.${index}.price`}
+                          title="Price"
+                        />
+                        <InputFieldFormik
+                          name={`items.${index}.quantity`}
+                          title="Qty"
+                        />
+                        <InputFieldRO
+                          name={`items.${index}.totalPrice`}
+                          value={
+                            (item.totalPrice = parseFloat(
+                              item.price * item.quantity
+                            ))
+                          }
+                          title="Total"
+                        />
+                      </div>
+                      <button
+                        className="font-bold text-red-800"
+                        type="button"
+                        onClick={() => {
+                          console.log("Clicked");
+                          remove(index);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    className="font-bold text-purple-800 mt-[1.4rem]"
+                    type="button"
+                    onClick={(e) => {
+                      push({
+                        item: "",
+                        desc: "",
+                        price: "",
+                        quantity: "",
+                        totalPrice: "",
+                      });
+                      e.preventDefault();
+                    }}
+                  >
+                    + Add item
+                  </button>
+                </div>
+              )}
+            </FieldArray>
+            <div className="mb-[1.4rem]">
+              <InputFieldFormik title="Notes" name="notes" />
+            </div>
+
+            <Button
+              type="submit"
+              title="Preview"
+              onClick={() => {
+                sessionStorage.setItem("sessionData", JSON.stringify(values));
+                console.log({ errors });
+              }}
+              className="bg-purple-800"
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }
