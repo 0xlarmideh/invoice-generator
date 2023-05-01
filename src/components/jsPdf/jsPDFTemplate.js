@@ -188,33 +188,6 @@ function jsPDFInvoiceTemplate(props) {
   doc.text(docWidth - 10, currentHeight, param.business.name, "right");
   doc.setFontSize(pdfConfig.fieldTextSize);
 
-  // if (param.logo.src) {
-  //   var imageHeader = "";
-  //   if (typeof window === "undefined") {
-  //     imageHeader = param.logo.src;
-  //   } else {
-  //     imageHeader = new Image();
-  //     imageHeader.src = param.logo.src;
-  //   }
-  //   //doc.text(htmlDoc.sessionDateText, docWidth - (doc.getTextWidth(htmlDoc.sessionDateText) + 10), currentHeight);
-  //   if (param.logo.type)
-  //     doc.addImage(
-  //       imageHeader,
-  //       param.logo.type,
-  //       10 + param.logo.margin.left,
-  //       currentHeight - 5 + param.logo.margin.top,
-  //       param.logo.width,
-  //       param.logo.height
-  //     );
-  //   else
-  //     doc.addImage(
-  //       imageHeader,
-  //       10 + param.logo.margin.left,
-  //       currentHeight - 5 + param.logo.margin.top,
-  //       param.logo.width,
-  //       param.logo.height
-  //     );
-  // }
 
   doc.setTextColor(colorGray);
 
@@ -277,6 +250,7 @@ function jsPDFInvoiceTemplate(props) {
     doc.text(10, currentHeight, param.contact.otherInfo);
   else currentHeight -= pdfConfig.subLineHeight;
   currentHeight += pdfConfig.subLineHeight;
+
 
   //end contact part
 

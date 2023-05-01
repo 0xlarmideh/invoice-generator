@@ -1,14 +1,15 @@
 // InvoicingForm.js
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CurrenciesData from "../../currencies.json";
-import InputFieldFormik from "../components/InputFieldFormik";
-import InputFieldRO from "../components/InputFieldRO";
+import InputFieldFormik from "../components/form/InputFieldFormik";
+import InputFieldRO from "../components/form/InputFieldRO";
 import { Heading, SmallHeading } from "../components/Typography";
-import Button from "../components/Button";
-import { Form, Formik, FieldArray, ErrorMessage } from "formik";
+
+import Button from "../components/form/Button";
+import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../schemas";
-import SelectField from "../components/Select";
+import SelectField from "../components/form/Select";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ function InvoicingForm() {
         item: "",
         desc: "",
         price: "",
-        quantity: "",
+        quantity: 1,
         totalPrice: "",
       },
     ],
@@ -186,10 +187,12 @@ function InvoicingForm() {
                         <InputFieldFormik
                           name={`items.${index}.price`}
                           title="Price"
+                          type="number"
                         />
                         <InputFieldFormik
                           name={`items.${index}.quantity`}
                           title="Qty"
+                          type="number"
                         />
                         <InputFieldRO
                           name={`items.${index}.totalPrice`}
@@ -221,7 +224,7 @@ function InvoicingForm() {
                         item: "",
                         desc: "",
                         price: "",
-                        quantity: "",
+                        quantity: 1,
                         totalPrice: "",
                       });
                       e.preventDefault();
