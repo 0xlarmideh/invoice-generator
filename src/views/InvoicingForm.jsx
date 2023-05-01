@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CurrenciesData from "../../currencies.json";
 import InputFieldFormik from "../components/form/InputFieldFormik";
 import InputFieldRO from "../components/form/InputFieldRO";
-import { Heading, SmallHeading } from "../components/Typography";
+import { Heading, SmallHeading, Paragraph } from "../components/Typography";
 
 import Button from "../components/form/Button";
 import { Form, Formik, FieldArray } from "formik";
@@ -73,8 +73,13 @@ function InvoicingForm() {
   ) : (
     <div>
       <Heading
-        title="Create New Invoice"
-        className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
+        title="Invoice Generator App"
+        className=" text-center text-blue pb-[.4rem] "
+      />
+      <Paragraph
+        title="Create invoice seamlessly within a lightning speed of time
+"
+        className="text-text text-center pb-[2rem] "
       />
       {/* Map over local storage items */}
       <div>

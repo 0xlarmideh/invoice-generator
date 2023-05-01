@@ -1,11 +1,11 @@
 import { Paragraph } from "./Typography"
 import { Icon } from '@iconify/react';
 
-const Navbar = () => {
+const Navbar = ({onClick}) => {
   return (
-    <nav className="flex justify-between items-center">
-      <Paragraph title="Invoice" />
-      <Icon icon="material-symbols:menu" />
+    <nav className="flex justify-between items-center text-[16px] mb-[3rem] ">
+      <p className="text-blue font-semibold tracking-tighter text-[20px]">INVOICE</p>
+      <Icon icon="material-symbols:menu" width={28} onClick={onClick} />
     </nav>
   );
 }

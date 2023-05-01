@@ -2,7 +2,7 @@ import React from "react";
 
 // Main heading component
 export const Heading = ({ title, className }) => {
-  return <h1 className={`text-4xl font-bold ${className}`}>{title}</h1>;
+  return <h1 className={`text-3xl font-medium ${className}`}>{title}</h1>;
 };
 
 // SubHeading component
