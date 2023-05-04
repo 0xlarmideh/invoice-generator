@@ -41,12 +41,27 @@ function InvoicingForm() {
     notes: "",
   };
 
-  // const [savedData, setSavedData] = useState(null);
   let oldData;
   oldData = JSON.parse(localStorage.getItem("savedItems"));
   let sData = JSON.parse(sessionStorage.getItem("sessionData"));
   if (sData) {
     initFormik = sData;
+  }
+
+  const handleSave = (prop) => {
+    // Create two new variables and use it to save data to storage after click
+    let old_data = [];
+    // let newData = JSON.parse(localStorage.getItem("savedItems"));
+    if (oldData == undefined) {
+      oldData = null;
+    }
+    if (oldData) {
+      old_data = oldData;
+    }
+    // Push the current value gotten from location state to the old data
+    old_data.push(prop);
+    // Update localStorage state
+    localStorage.setItem("savedItems", JSON.stringify(old_data));
   }
 
   useEffect(() => {
@@ -71,7 +86,7 @@ function InvoicingForm() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div>
+    <div className="max-w-[900px] mx-auto my-[0]">
       <Heading
         title="Invoice Generator App"
         className=" text-center text-blue pb-[.4rem] "
@@ -125,43 +140,42 @@ function InvoicingForm() {
               console.log(errors);
             }}
           >
-            <InputFieldFormik
-              title="Invoice Number"
-              type="text"
-              name="invoiceNumber"
-              className={"text-black"}
-            />
-            <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
+            <div className="flex flex-col text-text text-[21px]">
+              <label>
+                Invoice Number:{" "}
+                <span className="font-medium text-blue">
+                  {values.invoiceNumber}{" "}
+                </span>
+              </label>
               <InputFieldFormik
-                title="Recipient name"
                 type="text"
-                name="recipientName"
+                name="invoiceNumber"
                 className={"text-black"}
               />
-              <InputFieldFormik
-                title="Recipient email"
-                type="email"
-                name="recipientEmail"
-              />
             </div>
-            <div className="grid grid-cols-2 gap-[10px] bg-slate-100 pb-[1rem] pt-[.5rem] px-[.9rem] rounded-[10px] ">
-              <InputFieldFormik
-                title="Client name"
-                type="text"
-                name="clientName"
-              />
-              <InputFieldFormik
-                title="Client email"
-                type="email"
-                name="clientEmail"
-              />
-            </div>
+            <InputFieldFormik
+              title="Recipient name"
+              type="text"
+              name="recipientName"
+              className={"text-black"}
+            />
+            <InputFieldFormik
+              title="Recipient email"
+              type="email"
+              name="recipientEmail"
+            />
 
             <InputFieldFormik
-              title="Project Description"
+              title="Client name"
               type="text"
-              name="projectDescription"
+              name="clientName"
             />
+            <InputFieldFormik
+              title="Client email"
+              type="email"
+              name="clientEmail"
+            />
+
             <div className="grid grid-cols-2 gap-[10px] rounded-[10px] ">
               <InputFieldFormik title="Issued On" type="date" name="issuedOn" />
               <InputFieldFormik title="Due On" type="date" name="dueOn" />
@@ -179,7 +193,7 @@ function InvoicingForm() {
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2">
+                      <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2 items-baseline">
                         <InputFieldFormik
                           name={`items.${index}.item`}
                           title="Item"
@@ -222,7 +236,7 @@ function InvoicingForm() {
                     </div>
                   ))}
                   <button
-                    className="font-bold text-purple-800 mt-[1.4rem]"
+                    className="font-bold text-blue mt-[1.4rem]"
                     type="button"
                     onClick={(e) => {
                       push({
@@ -243,16 +257,23 @@ function InvoicingForm() {
             <div className="mb-[1.4rem]">
               <InputFieldFormik title="Notes" name="notes" />
             </div>
-
-            <Button
-              type="submit"
-              title="Preview"
-              onClick={() => {
-                sessionStorage.setItem("sessionData", JSON.stringify(values));
-                console.log({ errors });
-              }}
-              className="bg-purple-800"
-            />
+            <div className="btns flex space-between">
+              <Button
+                type="submit"
+                title="Preview"
+                onClick={() => {
+                  sessionStorage.setItem("sessionData", JSON.stringify(values));
+                  console.log({ errors });
+                }}
+                className="bg-blue block"
+              />
+              <Button
+                type="button"
+                title="Save Draft"
+                onClick={()=>handleSave(values)}
+                className="text-black"
+              />
+            </div>
           </Form>
         )}
       </Formik>

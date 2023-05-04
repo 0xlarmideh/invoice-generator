@@ -11,6 +11,9 @@ module.exports = {
         accent_light: "#B2B2B2",
         overlay: "rgba(0, 0, 0, 0.26)",
       },
+      fontFamily: {
+        'grotesk': ['Space Grotesk', 'sans-serif']
+      },
     },
   },
   plugins: [],

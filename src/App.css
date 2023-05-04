@@ -1,13 +1,10 @@
 #root {
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
   background-color: white;
 }
 
 
-.invoice-items {
-  margin: 2rem 0;
-}
 .loading-spinner {
   display: flex;
   justify-content: center;

@@ -34,19 +34,7 @@ function Preview() {
     totalAmount += item.totalPrice;
   });
 
-  // Create two new variables and use it to save data to storage after click
-  let new_data = formData;
-  let old_data = [];
-  let oldData = JSON.parse(localStorage.getItem("savedItems"));
-  if (oldData == undefined) {
-    oldData = null;
-  }
-  if (oldData) {
-    old_data = oldData;
-  }
-  // Push the current value gotten from location state to the old data
-  old_data.push(new_data);
-
+ 
   // PDF Section
   var props = {
     outputType: OutputType.Save,
@@ -139,12 +127,6 @@ function Preview() {
     pageLabel: "Page ",
   };
 
-  // Save Preset
-  const savePreset = () => {
-    // Update localStorage state
-    localStorage.setItem("savedItems", JSON.stringify(old_data));
-  };
-
   const handleDownloadClick = () => {
     var pdfObject = jsPDFInvoiceTemplate(props);
     // pdfObject.blob;
@@ -232,11 +214,6 @@ function Preview() {
           onClick={handleEditClick}
           title="Edit"
           className="bg-slate-600"
-        />
-        <Button
-          onClick={savePreset}
-          title="Save Preset"
-          className="bg-purple-800 "
         />
         <Button
           onClick={handleDownloadClick}
