@@ -1,10 +1,10 @@
 import Navbar from "./navbar";
 import { Outlet } from "react-router-dom";
 
-const Layout = () => {
+const Layout = ({onClick}) => {
   return (
     <>
-      <Navbar />
+      <Navbar onClick={onClick} />
       <Outlet />
     </>
   );

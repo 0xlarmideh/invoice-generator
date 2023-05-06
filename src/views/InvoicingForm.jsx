@@ -5,7 +5,7 @@ import CurrenciesData from "../../currencies.json";
 import InputFieldFormik from "../components/form/InputFieldFormik";
 import InputFieldRO from "../components/form/InputFieldRO";
 import { Heading, SmallHeading, Paragraph } from "../components/Typography";
-
+import { Icon } from "@iconify/react";
 import Button from "../components/form/Button";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../schemas";
@@ -17,6 +17,7 @@ function InvoicingForm() {
   const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null);
+  const [isOpen, setOpen] = useState(false)
   let initFormik = {
     invoiceNumber: "",
     recipientName: "",
@@ -86,42 +87,63 @@ function InvoicingForm() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div className="max-w-[900px] mx-auto my-[0]">
+    <div className="max-w-[900px] mx-auto my-[0] p-[20px] shadow ">
       <Heading
         title="Invoice Generator App"
         className=" text-center text-blue pb-[.4rem] "
       />
       <Paragraph
-        title="Create invoice seamlessly within a lightning speed of time
-"
+        title="Create invoice seamlessly within a lightning speed of time"
         className="text-text text-center pb-[2rem] "
       />
       {/* Map over local storage items */}
       <div>
         {oldData && (
-          <div className="flex gap-2 mb-4 ">
-            {oldData.map((item, index) => {
-              return (
-                <button
-                  key={index}
-                  // Set savedData to current item
-                  onClick={() => {
-                    savedData = item;
+          <div className="flex gap-2 mb-4 text-text ">
+            <div>
+              <div className="flex justify-between border-b-[1px] items-center pb-4 mb-4 ">
+                <Paragraph title="Drafts" />
+                <div onClick={() => setOpen(!isOpen)}>
+                  {isOpen ? (
+                    <Icon
+                      icon="material-symbols:keyboard-arrow-up"
+                      width="24"
+                    />
+                  ) : (
+                    <Icon
+                      icon="material-symbols:keyboard-arrow-down"
+                      width="24"
+                    />
+                  )}
+                </div>
+              </div>
+              {isOpen && (
+                <div>
+                  {oldData.map((item, index) => {
+                    return (
+                      <button
+                        key={index}
+                        // Set savedData to current item
+                        onClick={() => {
+                          savedData = item;
 
-                    // Update formValues state
-                    setFormValues(savedData);
-                    console.log(savedData);
-                  }}
-                >
-                  <div className="card border-2 p-4 rounded-[10px] ">
-                    <h2 className="font-bold text-[20px] ">
-                      {item.clientName}{" "}
-                    </h2>
-                    <p>{item.recipientName} </p>
-                  </div>
-                </button>
-              );
-            })}
+                          // Update formValues state
+                          setFormValues(savedData);
+                          console.log(savedData);
+                        }}
+                      >
+                        <div className="card border-2 p-4 rounded-[10px] ">
+                          <h2 className="font-bold text-[20px] ">
+                            {item.clientName}{" "}
+                          </h2>
+                          <p>{item.recipientName} </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -144,7 +166,7 @@ function InvoicingForm() {
               <label>
                 Invoice Number:{" "}
                 <span className="font-medium text-blue">
-                  {values.invoiceNumber}{" "}
+                  {values.invoiceNumber}
                 </span>
               </label>
               <InputFieldFormik
@@ -257,7 +279,13 @@ function InvoicingForm() {
             <div className="mb-[1.4rem]">
               <InputFieldFormik title="Notes" name="notes" />
             </div>
-            <div className="btns flex space-between">
+            <div className="btns flex justify-between my-[4rem] ">
+              <Button
+                type="button"
+                title="Save Draft"
+                onClick={() => handleSave(values)}
+                className="text-text"
+              />
               <Button
                 type="submit"
                 title="Preview"
@@ -265,13 +293,7 @@ function InvoicingForm() {
                   sessionStorage.setItem("sessionData", JSON.stringify(values));
                   console.log({ errors });
                 }}
-                className="bg-blue block"
-              />
-              <Button
-                type="button"
-                title="Save Draft"
-                onClick={()=>handleSave(values)}
-                className="text-black"
+                className="bg-blue text-white"
               />
             </div>
           </Form>

@@ -4,6 +4,14 @@
   background-color: white;
 }
 
+.shadow {
+  box-shadow: 12px 12px 32px #F5F5F5;
+}
+
+.draft {
+  display: flex;
+  justify-content: space-between;
+}
 
 .loading-spinner {
   display: flex;

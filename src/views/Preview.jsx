@@ -144,36 +144,74 @@ function Preview() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div>
-      <Heading
-        title={"Invoice " + `[${formData.invoiceNumber}]` + " Preview"}
-        className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
-      />
-      <div className="flex gap-6 mb-[1rem]">
-        <div>
-          <Paragraph title="Issued On" className="text-slate-500" />
-          <SmallHeading title={formData.issuedOn} />
-        </div>
-        <div>
-          <Paragraph title="Due On" className="text-slate-500" />
-          <SmallHeading title={formData.dueOn} />
-        </div>
+    <div className="max-w-[900px] mx-auto pb-[4rem] p-[20px] text-text shadow">
+      <div className="text-[24px] pb-[16px] ">
+        Invoice Number:{" "}
+        <span className="font-medium text-blue">{formData.invoiceNumber}</span>
       </div>
+
+      <Paragraph
+        title={formData.notes}
+        className="border-b-2 border-slate-100 text-text pb-[2rem] mb-[1.2rem] "
+      />
+
       <div className="grid gap-6 grid-cols-2 mb-[1rem]">
         <div>
-          <Paragraph title="Bill From" className="text-slate-500" />
-          <SmallHeading title={formData.recipientName} />
-          <Paragraph title={formData.billFrom} className="text-slate-500" />
+          <Paragraph
+            title="Bill From"
+            className="text-slate-500 pb-[14px] font-medium "
+          />
+          <div className="ml-[5px] ">
+            <SmallHeading
+              title={formData.recipientName}
+              className="pb-[14px]"
+            />
+            <Paragraph
+              title={formData.billFrom}
+              className="text-slate-500 pb-[18px]"
+            />
+          </div>
+          <div>
+            <Paragraph
+              title="Issued On"
+              className="text-slate-500 pb-[14px] font-medium"
+            />
+            <div className="ml-[5px] ">
+              <SmallHeading title={formData.issuedOn} className="pb-[14px]" />
+            </div>
+          </div>
         </div>
-        <div>
-          <Paragraph title="Bill To" className="text-slate-500" />
-          <SmallHeading title={formData.clientName} />
-          <Paragraph title={formData.billTo} className="text-slate-500" />
+        <div className="justify-end flex">
+          <div>
+            <Paragraph
+              title="Bill To"
+              className="text-slate-500 pb-[14px] font-medium"
+            />
+            <div className="ml-[5px] ">
+              <SmallHeading title={formData.clientName} className="pb-[14px]" />
+              <Paragraph
+                title={formData.billTo}
+                className="text-slate-500 pb-[18px]"
+              />
+            </div>
+            <div>
+              <Paragraph
+                title="Due On"
+                className="text-slate-500 pb-[14px] font-medium"
+              />
+              <div className="ml-[5px] ">
+                <SmallHeading title={formData.dueOn} className="pb-[14px]" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <SmallHeading className="mb-[1.2rem] pt-[.4rem] " title="Invoice Items" />
-      <div className="border-slate-200 border-2 rounded-[10px]">
-        <div className="grid grid-cols-[51%_15%_10%_19%] py-[.4rem] px-[.35rem] text-slate-500 bg-slate-100 ">
+
+      <div className="mb-[1.2rem] pt-[.4rem] text-[20px] font-medium ">
+        Invoice Items
+      </div>
+      <div>
+        <div className="grid grid-cols-[56%_15%_15%_14%] py-[.4rem] px-[.35rem] text-slate-500 ">
           <Paragraph title="Description" />
           <Paragraph title="Price" />
           <Paragraph title="Qty" />
@@ -181,9 +219,7 @@ function Preview() {
         </div>
         {formData.items.map((item, index) => (
           <div
-            className={`grid grid-cols-[51%_15%_10%_19%] py-[.8rem] px-[.35rem] ${
-              index !== formData.items.length - 1 && "border-b-2"
-            } `}
+            className="grid grid-cols-[56%_15%_15%_14%] py-[.8rem] px-[.35rem]"
             key={index}
           >
             <SmallHeading title={item.item} />
@@ -195,30 +231,30 @@ function Preview() {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-[51%_26%_19%] py-[.4rem] px-[.35rem] ">
-        <Paragraph className="text-slate-500" title={formData.notes} />
+      <div className="grid grid-cols-[56%_30%_14%] py-[.4rem] px-[.35rem] font-medium ">
+        <span></span>
         <SmallHeading
-          className="text-slate-500 text-[1rem]"
-          title="Total Amount"
+          className="text-slate-500 text-[1.2rem]"
+          title="Total"
         />
         <SmallHeading
-          className="text-slate-500 text-[1rem]"
-          title={`${totalAmount }` + " " +  `${formData.currency}`}
+          className="text-blue text-[1.2rem]"
+          title={`${totalAmount}` + " " + `${formData.currency}`}
         />
         {/* <SmallHeading title={`${form}`} /> */}
       </div>
 
-      <div className="my-[2rem]"></div>
-      <div className="flex gap-2">
+      <div className="my-[5rem]"></div>
+      <div className="flex justify-between">
         <Button
           onClick={handleEditClick}
           title="Edit"
-          className="bg-slate-600"
+          className="text-text"
         />
         <Button
           onClick={handleDownloadClick}
           title="Download PDF"
-          className="bg-green-600"
+          className="bg-blue text-white"
         />
       </div>
     </div>
