@@ -132,10 +132,10 @@ function InvoicingForm() {
                           console.log(savedData);
                         }}
                       >
-                        <div className="card border-2 p-4 rounded-[10px] ">
-                          <h2 className="font-bold text-[20px] ">
-                            {item.clientName}{" "}
-                          </h2>
+                        <div className=" ">
+                          <p className="font-regular text-[16px] ">Invoice Number: 
+                            {item.invoiceNumber}
+                          </p>
                           <p>{item.recipientName} </p>
                         </div>
                       </button>

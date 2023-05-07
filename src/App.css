@@ -1,6 +1,6 @@
 #root {
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 0rem 2rem;
   background-color: white;
 }
 
@@ -13,10 +13,10 @@
   justify-content: space-between;
 }
 
-.loading-spinner {
+.loading-spinner, .downloaded {
   display: flex;
   justify-content: center;
-  height: 80vh;
+  height: 70vh;
   align-items: center;
 }
 .loader {

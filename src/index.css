@@ -16,9 +16,9 @@
 }
 
 body {
-  margin: 2rem auto;
+  margin: 2rem auto 0rem auto;
   min-width: 320px;
-  min-height: 100vh;
+  /* min-height: 80vh; */
 }
 
 .text-black {
