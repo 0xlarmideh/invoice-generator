@@ -2,7 +2,7 @@ import React from "react";
 
 // Main heading component
 export const Heading = ({ title, className }) => {
-  return <h1 className={`text-4xl font-bold ${className}`}>{title}</h1>;
+  return <h1 className={`text-3xl font-medium ${className}`}>{title}</h1>;
 };
 
 // SubHeading component
@@ -14,7 +14,7 @@ export const SubHeading = ({ title, className }) => {
 
 //Small heading component
 export const SmallHeading = ({ title, className }) => {
-  return <h3 className={`text-[1.1rem] font-bold ${className}`}>{title}</h3>;
+  return <h3 className={`text-[18px] ${className}`}>{title}</h3>;
 };
 
 // Regular P tag

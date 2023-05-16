@@ -1,22 +1,22 @@
 #root {
-  max-width: 600px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 2rem 0rem 2rem;
   background-color: white;
-  border-radius: 20px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-
-  /* text-align: center; */
 }
 
-
-.invoice-items {
-  margin: 2rem 0;
+.shadow {
+  box-shadow: 12px 12px 32px #F5F5F5;
 }
-.loading-spinner {
+
+.draft {
+  display: flex;
+  justify-content: space-between;
+}
+
+.loading-spinner, .downloaded {
   display: flex;
   justify-content: center;
-  height: 80vh;
+  height: 70vh;
   align-items: center;
 }
 .loader {

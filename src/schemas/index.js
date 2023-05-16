@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const basicSchema = yup.object().shape({
-  invoiceNumber: yup.number().min(1).required("Minimum is 1"),
+  invoiceNumber: yup.string().required("Please input a value"),
   recipientEmail: yup
     .string()
     .email("Please enter a valid email")
@@ -10,12 +10,11 @@ export const basicSchema = yup.object().shape({
   clientName: yup.string().required("Required"),
   issuedOn: yup
     .date()
-    .max(new Date(), { message: "Due Date can't be higher than today's date" })
+    .max(new Date(), { message: "Issued Date can't be higher than today's date" })
     .required(),
   items: yup.object().shape({
     item: yup.string().required(),
     quantity: yup.number().min(1).required("Please input at least 1 quantity"),
     price: yup.number().min(1).required("Minimum is 1"),
   }),
-  // dueOn: yup.date().min(new Date(issuedOn), {message: "Due Date can't be lesser than issued date"}).max(new Date()).required(),
 });

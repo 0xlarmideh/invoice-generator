@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Heading, SmallHeading, Paragraph } from "../components/Typography";
-import Button from "../components/Button";
-import jsPDFInvoiceTemplate from "../components/jsPDFTemplate";
-import { OutputType, jsPDF } from "../components/outputType";
-// import jsPDF from "jspdf";
-
-// import jsPDF from "jspdf";
-// import jsPDFInvoiceTemplate, {
-//   OutputType,
-//   jsPDF,
-// } from "jspdf-invoice-template";
+import { SmallHeading, Paragraph } from "../components/Typography";
+import Button from "../components/form/Button";
+import jsPDFInvoiceTemplate from "../components/jsPdf/jsPDFTemplate.js";
+import { OutputType } from "../components/jsPdf/outputType";
 
 function Preview() {
   const navigate = useNavigate();
@@ -41,19 +34,7 @@ function Preview() {
     totalAmount += item.totalPrice;
   });
 
-  // Create two new variables and use it to save data to storage after click
-  let new_data = formData;
-  let old_data = [];
-  let oldData = JSON.parse(localStorage.getItem("savedItems"));
-  if (oldData == undefined) {
-    oldData = null;
-  }
-  if (oldData) {
-    old_data = oldData;
-  }
-  // Push the current value gotten from location state to the old data
-  old_data.push(new_data);
-
+ 
   // PDF Section
   var props = {
     outputType: OutputType.Save,
@@ -146,17 +127,8 @@ function Preview() {
     pageLabel: "Page ",
   };
 
-  // Save Preset
-  const savePreset = () => {
-    // Update localStorage state
-    localStorage.setItem("savedItems", JSON.stringify(old_data));
-  };
-
   const handleDownloadClick = () => {
     var pdfObject = jsPDFInvoiceTemplate(props);
-    // pdfObject.blob;
-    pdfObject.jsPDFDocObject.save();
-
     // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
@@ -169,36 +141,74 @@ function Preview() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div>
-      <Heading
-        title={"Invoice " + `[${formData.invoiceNumber}]` + " Preview"}
-        className="border-b-2 border-slate-100 pb-[2rem] mb-[1.2rem] "
-      />
-      <div className="flex gap-6 mb-[1rem]">
-        <div>
-          <Paragraph title="Issued On" className="text-slate-500" />
-          <SmallHeading title={formData.issuedOn} />
-        </div>
-        <div>
-          <Paragraph title="Due On" className="text-slate-500" />
-          <SmallHeading title={formData.dueOn} />
-        </div>
+    <div className="max-w-[900px] mx-auto pb-[4rem] p-[20px] text-text shadow">
+      <div className="text-[24px] pb-[16px] ">
+        Invoice Number:{" "}
+        <span className="font-medium text-blue">{formData.invoiceNumber}</span>
       </div>
+
+      <Paragraph
+        title={formData.notes}
+        className="border-b-2 border-slate-100 text-text pb-[2rem] mb-[1.2rem] "
+      />
+
       <div className="grid gap-6 grid-cols-2 mb-[1rem]">
         <div>
-          <Paragraph title="Bill From" className="text-slate-500" />
-          <SmallHeading title={formData.recipientName} />
-          <Paragraph title={formData.billFrom} className="text-slate-500" />
+          <Paragraph
+            title="Bill From"
+            className="text-slate-500 pb-[14px] font-medium "
+          />
+          <div className="ml-[5px] ">
+            <SmallHeading
+              title={formData.recipientName}
+              className="pb-[14px]"
+            />
+            <Paragraph
+              title={formData.billFrom}
+              className="text-slate-500 pb-[18px]"
+            />
+          </div>
+          <div>
+            <Paragraph
+              title="Issued On"
+              className="text-slate-500 pb-[14px] font-medium"
+            />
+            <div className="ml-[5px] ">
+              <SmallHeading title={formData.issuedOn} className="pb-[14px]" />
+            </div>
+          </div>
         </div>
-        <div>
-          <Paragraph title="Bill To" className="text-slate-500" />
-          <SmallHeading title={formData.clientName} />
-          <Paragraph title={formData.billTo} className="text-slate-500" />
+        <div className="justify-end flex">
+          <div>
+            <Paragraph
+              title="Bill To"
+              className="text-slate-500 pb-[14px] font-medium"
+            />
+            <div className="ml-[5px] ">
+              <SmallHeading title={formData.clientName} className="pb-[14px]" />
+              <Paragraph
+                title={formData.billTo}
+                className="text-slate-500 pb-[18px]"
+              />
+            </div>
+            <div>
+              <Paragraph
+                title="Due On"
+                className="text-slate-500 pb-[14px] font-medium"
+              />
+              <div className="ml-[5px] ">
+                <SmallHeading title={formData.dueOn} className="pb-[14px]" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <SmallHeading className="mb-[1.2rem] pt-[.4rem] " title="Invoice Items" />
-      <div className="border-slate-200 border-2 rounded-[10px]">
-        <div className="grid grid-cols-[51%_15%_10%_19%] py-[.4rem] px-[.35rem] text-slate-500 bg-slate-100 ">
+
+      <div className="mb-[1.2rem] pt-[.4rem] text-[20px] font-medium ">
+        Invoice Items
+      </div>
+      <div>
+        <div className="grid grid-cols-[56%_15%_15%_14%] py-[.4rem] px-[.35rem] text-slate-500 ">
           <Paragraph title="Description" />
           <Paragraph title="Price" />
           <Paragraph title="Qty" />
@@ -206,49 +216,39 @@ function Preview() {
         </div>
         {formData.items.map((item, index) => (
           <div
-            className={`grid grid-cols-[51%_15%_10%_19%] py-[.8rem] px-[.35rem] ${
-              index !== formData.items.length - 1 && "border-b-2"
-            } `}
+            className="grid grid-cols-[56%_15%_15%_14%] py-[.8rem] px-[.35rem]"
             key={index}
           >
             <SmallHeading title={item.item} />
             <SmallHeading title={item.price} />
             <SmallHeading title={item.quantity} />
             <SmallHeading title={item.totalPrice + formData.currency} />
-            {/* {item.item}: {item.quantity} x {item.price} = {item.totalPrice}
-            {formData.currency} */}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-[51%_26%_19%] py-[.4rem] px-[.35rem] ">
-        <Paragraph className="text-slate-500" title={formData.notes} />
+      <div className="grid grid-cols-[56%_30%_14%] py-[.4rem] px-[.35rem] font-medium ">
+        <span></span>
         <SmallHeading
-          className="text-slate-500 text-[1rem]"
-          title="Total Amount"
+          className="text-slate-500 text-[1.2rem]"
+          title="Total"
         />
         <SmallHeading
-          className="text-slate-500 text-[1rem]"
-          title={`${totalAmount }` + " " +  `${formData.currency}`}
+          className="text-blue text-[1.2rem]"
+          title={`${totalAmount}` + " " + `${formData.currency}`}
         />
-        {/* <SmallHeading title={`${form}`} /> */}
       </div>
 
-      <div className="my-[2rem]"></div>
-      <div className="flex gap-2">
+      <div className="my-[5rem]"></div>
+      <div className="flex justify-between">
         <Button
           onClick={handleEditClick}
           title="Edit"
-          className="bg-slate-600"
-        />
-        <Button
-          onClick={savePreset}
-          title="Save Preset"
-          className="bg-purple-800 "
+          className="text-text"
         />
         <Button
           onClick={handleDownloadClick}
           title="Download PDF"
-          className="bg-green-600"
+          className="bg-blue text-white"
         />
       </div>
     </div>
