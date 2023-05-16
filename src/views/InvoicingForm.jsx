@@ -17,7 +17,7 @@ function InvoicingForm() {
   const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null);
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false);
   let initFormik = {
     invoiceNumber: "",
     recipientName: "",
@@ -63,7 +63,7 @@ function InvoicingForm() {
     old_data.push(prop);
     // Update localStorage state
     localStorage.setItem("savedItems", JSON.stringify(old_data));
-  }
+  };
 
   useEffect(() => {
     // console.log(oldData);
@@ -73,7 +73,6 @@ function InvoicingForm() {
     }, 1000);
 
     if (formData) {
-      console.log(formData);
       navigate("/preview", { state: { formData } });
     }
   }, [formData]);
@@ -99,23 +98,18 @@ function InvoicingForm() {
       {/* Map over local storage items */}
       <div>
         {oldData && (
-          <div className="flex gap-2 mb-4 text-text ">
+          <div className=" mb-4 text-text ">
             <div>
-              <div className="flex justify-between border-b-[1px] items-center pb-4 mb-4 ">
+              <div
+                className="flex justify-between w-full border-b-[1px] items-center pb-4 mb-4 "
+                onClick={() => setOpen(!isOpen)}
+              >
                 <Paragraph title="Drafts" />
-                <div onClick={() => setOpen(!isOpen)}>
-                  {isOpen ? (
-                    <Icon
-                      icon="material-symbols:keyboard-arrow-up"
-                      width="24"
-                    />
-                  ) : (
-                    <Icon
-                      icon="material-symbols:keyboard-arrow-down"
-                      width="24"
-                    />
-                  )}
-                </div>
+                <Icon
+                  icon="material-symbols:keyboard-arrow-up"
+                  width="24"
+                  rotate={isOpen ? 2 : 0}
+                />
               </div>
               {isOpen && (
                 <div>
@@ -133,8 +127,8 @@ function InvoicingForm() {
                         }}
                       >
                         <div className=" ">
-                          <p className="font-regular text-[16px] ">Invoice Number: 
-                            {item.invoiceNumber}
+                          <p className="font-regular text-[16px] ">
+                            {`Invoice: ${item.invoiceNumber}`}
                           </p>
                           <p>{item.recipientName} </p>
                         </div>
@@ -164,7 +158,7 @@ function InvoicingForm() {
           >
             <div className="flex flex-col text-text text-[21px]">
               <label>
-                Invoice Number:{" "}
+                Invoice Number:
                 <span className="font-medium text-blue">
                   {values.invoiceNumber}
                 </span>

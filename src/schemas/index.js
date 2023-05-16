@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const basicSchema = yup.object().shape({
-  invoiceNumber: yup.number().min(1).required("Minimum is 1"),
+  invoiceNumber: yup.string().required("Please input a value"),
   recipientEmail: yup
     .string()
     .email("Please enter a valid email")

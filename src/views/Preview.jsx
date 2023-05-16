@@ -129,9 +129,6 @@ function Preview() {
 
   const handleDownloadClick = () => {
     var pdfObject = jsPDFInvoiceTemplate(props);
-    // pdfObject.blob;
-    pdfObject.jsPDFDocObject.save();
-
     // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
@@ -226,8 +223,6 @@ function Preview() {
             <SmallHeading title={item.price} />
             <SmallHeading title={item.quantity} />
             <SmallHeading title={item.totalPrice + formData.currency} />
-            {/* {item.item}: {item.quantity} x {item.price} = {item.totalPrice}
-            {formData.currency} */}
           </div>
         ))}
       </div>
@@ -241,7 +236,6 @@ function Preview() {
           className="text-blue text-[1.2rem]"
           title={`${totalAmount}` + " " + `${formData.currency}`}
         />
-        {/* <SmallHeading title={`${form}`} /> */}
       </div>
 
       <div className="my-[5rem]"></div>
