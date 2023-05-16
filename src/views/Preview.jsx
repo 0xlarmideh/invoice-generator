@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Heading, SmallHeading, Paragraph } from "../components/Typography";
+import { SmallHeading, Paragraph } from "../components/Typography";
 import Button from "../components/form/Button";
-import jsPDFInvoiceTemplate from "../components/jspdf/jsPDFTemplate";
+import {jsPDFInvoiceTemplate} from "../components/jspdf/jsPDFTemplate.js";
 import { OutputType } from "../components/jsPdf/outputType";
 
 function Preview() {

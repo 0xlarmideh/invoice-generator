@@ -637,4 +637,4 @@ function jsPDFInvoiceTemplate(props) {
   return returnObj;
 }
 
-export default jsPDFInvoiceTemplate;
+export {jsPDFInvoiceTemplate};
