@@ -2,7 +2,7 @@ import React from 'react'
 import { Field, ErrorMessage } from "formik";
 
 
-const InputFieldFormik = ({title, type, name, error, span}) => {
+const InputFieldFormik = ({title, type, name, error,}) => {
   return (
     <div className="flex flex-col py-[10px]">
       <label className="text-[20px] tracking-wide font-regular py-[.1rem] text-text">

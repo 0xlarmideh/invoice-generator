@@ -10,14 +10,18 @@ import Button from "../components/form/Button";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../schemas";
 import SelectField from "../components/form/Select";
+import { Modal } from "react-overlays";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate();
   const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null);
   const [isOpen, setOpen] = useState(false);
+  const handleClose = () => setShowModal(false)
+  const handleShow = () => setShowModal(true)
   let initFormik = {
     invoiceNumber: "",
     recipientName: "",
@@ -29,7 +33,7 @@ function InvoicingForm() {
     dueOn: "",
     billFrom: "",
     billTo: "",
-    currency: "",
+    currency: "USD",
     items: [
       {
         item: "",
@@ -79,6 +83,7 @@ function InvoicingForm() {
 
   // Initialize savedData variable to store clicked preset
   let savedData;
+  const renderBackdrop = (props) => <div className="backdrop" {...props} />;
 
   // Show loading screen
   return loading ? (
@@ -86,7 +91,7 @@ function InvoicingForm() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div className="max-w-[900px] mx-auto my-[0] p-[20px] shadow ">
+    <div className="max-w-[900px] mx-auto mb-[6rem] p-[20px] shadow ">
       <Heading
         title="Invoice Generator App"
         className=" text-center text-blue pb-[.4rem] "
@@ -128,7 +133,10 @@ function InvoicingForm() {
                       >
                         <div className=" ">
                           <p className="font-regular text-[16px] ">
-                            {`Invoice: ${item.invoiceNumber}`}
+                            Invoice:{" "}
+                            <span className="font-bold text-blue">
+                              {item.invoiceNumber}
+                            </span>
                           </p>
                           <p>{item.recipientName} </p>
                         </div>
@@ -271,14 +279,22 @@ function InvoicingForm() {
               )}
             </FieldArray>
             <div className="mb-[1.4rem]">
-              <InputFieldFormik title="Notes" name="notes" />
+              <InputFieldFormik
+                component="textarea"
+                title="Notes"
+                name="notes"
+              />
             </div>
             <div className="btns flex justify-between my-[4rem] ">
               <Button
                 type="button"
                 title="Save Draft"
-                onClick={() => handleSave(values)}
-                className="text-text"
+                onClick={() => {
+                  handleSave(values);
+                  setShowModal(true);
+                  setTimeout(() => setShowModal(false), 1500);
+                }}
+                className="text-text bg-slate-200"
               />
               <Button
                 type="submit"
@@ -293,6 +309,24 @@ function InvoicingForm() {
           </Form>
         )}
       </Formik>
+      <Modal
+        className="modal  "
+        show={showModal}
+        onHide={handleClose}
+        renderBackdrop={renderBackdrop}
+      >
+        <div>
+          <div className="flex flex-col justify-between items-center">
+            <Icon
+              className="mb-[16px] text-blue "
+              icon="icons8:checked"
+              // color="text-blue"
+              width="48"
+            />
+            <div className="text-center text-[20px] ">Saved to drafts</div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
