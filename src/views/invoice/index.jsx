@@ -1,20 +1,16 @@
 // InvoicingForm.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CurrenciesData from "../../currencies.json";
-import InputFieldFormik from "../components/form/InputFieldFormik";
-import InputFieldRO from "../components/form/InputFieldRO";
-import { Heading, SmallHeading, Paragraph } from "../components/Typography";
+import currencies from "../../../currencies.json";
+import { Heading, SmallHeading, Paragraph } from "../../components/typography/Typography";
 import { Icon } from "@iconify/react";
-import Button from "../components/form/Button";
+import { Button, InputFieldFormik, InputFieldRO, SelectField } from "../../components/form";
 import { Form, Formik, FieldArray } from "formik";
-import { basicSchema } from "../schemas";
-import SelectField from "../components/form/Select";
+import { basicSchema } from "../../schemas";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [currencies] = useState(CurrenciesData);
   const [formData, setFormData] = useState(null);
   const [formValues, setFormValues] = useState(null);
   const [isOpen, setOpen] = useState(false);
@@ -89,7 +85,7 @@ function InvoicingForm() {
     <div className="max-w-[900px] mx-auto my-[0] p-[20px] shadow ">
       <Heading
         title="Invoice Generator App"
-        className=" text-center text-blue pb-[.4rem] "
+        className=" text-center font-monument text-blue pb-[.4rem] "
       />
       <Paragraph
         title="Create invoice seamlessly within a lightning speed of time"
@@ -146,16 +142,15 @@ function InvoicingForm() {
         initialValues={formValues || initFormik}
         validationSchema={basicSchema}
         enableReinitialize
+        onSubmit={(event) => {
+          event.preventDefault();
+          sessionStorage.setItem("sessionData", JSON.stringify(values));
+          console.log(errors);
+        }}
       >
         {/* Deconstruct props from Formik  */}
-        {({ values, errors, actions, setFieldValue }) => (
-          <Form
-            onSubmit={(event) => {
-              event.preventDefault();
-              setFormData(values);
-              console.log(errors);
-            }}
-          >
+        {({ values }) => (
+          <Form>
             <div className="flex flex-col text-text text-[21px]">
               <label>
                 Invoice Number:
@@ -283,10 +278,6 @@ function InvoicingForm() {
               <Button
                 type="submit"
                 title="Preview"
-                onClick={() => {
-                  sessionStorage.setItem("sessionData", JSON.stringify(values));
-                  console.log({ errors });
-                }}
                 className="bg-blue text-white"
               />
             </div>

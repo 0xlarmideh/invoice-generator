@@ -12,7 +12,8 @@ module.exports = {
         overlay: "rgba(0, 0, 0, 0.26)",
       },
       fontFamily: {
-        'grotesk': ['Space Grotesk', 'sans-serif']
+        'grotesk': ['Space Grotesk', 'sans-serif'],
+        'monument': ['Monument Extended Bold']
       },
     },
   },

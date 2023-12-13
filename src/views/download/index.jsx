@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import Button from "../components/form/Button";
+import { Button } from "../../components/form";
 import { useNavigate } from 'react-router-dom';
-import { Paragraph } from "../components/Typography";
+import { Paragraph } from "../../components/typography/Typography";
 
 
 const Downloaded = () => {

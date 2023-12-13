@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SmallHeading, Paragraph } from "../components/Typography";
-import Button from "../components/form/Button";
-import jsPDFInvoiceTemplate from "../components/jsPdf/jsPDFTemplate.js";
-import { OutputType } from "../components/jsPdf/outputType";
+import { SmallHeading, Paragraph } from "../../components/typography/Typography.jsx";
+import { Button } from "../../components/form/index.jsx";
+import jsPDFInvoiceTemplate from "../../components/jsPdf/jsPDFTemplate.js";
+import { OutputType } from "../../components/jsPdf/outputType.js";
 
 function Preview() {
   const navigate = useNavigate();
