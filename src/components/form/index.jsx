@@ -1,6 +1,6 @@
 import { Field, ErrorMessage } from "formik";
 
-export const InputFieldFormik = ({ title, type, name, error, ...restProps }) => {
+export const CustomInput = ({ title, type, name, error, ...restProps }) => {
   return (
     <div className="flex flex-col py-[10px]">
       <label className="text-[20px] tracking-wide font-regular py-[.1rem] text-text">

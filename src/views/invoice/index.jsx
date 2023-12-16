@@ -6,92 +6,26 @@ import {
   Heading,
   SmallHeading,
   Paragraph,
-} from "../../components/typography/Typography";``
-import { Button, InputFieldFormik, SelectField } from "../../components/form";
+} from "../../components/typography/Typography";
+``;
+import { Button, CustomInput, SelectField } from "../../components/form";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../../schemas";
-import { useDispatch, useSelector } from "react-redux";
-import { setDrafts } from "../../store/slices/draftSlice";
-import { ToastContainer, toast } from "react-toastify";
+import {  useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { setFormDataValues } from "../../store/slices/formDataSlice";
 import Drafts from "./Drafts";
+import useInvoice from "../../utils/hooks/useInvoice";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(null);
-  const [isOpen, setOpen] = useState(false);
-  let initFormik = {
-    invoiceNumber: "",
-    recipientName: "",
-    recipientEmail: "",
-    clientName: "",
-    clientEmail: "",
-    projectDescription: "",
-    issuedOn: "",
-    dueOn: "",
-    billFrom: "",
-    billTo: "",
-    currency: "",
-    items: [
-      {
-        item: "",
-        desc: "",
-        price: 1,
-        quantity: 1,
-        totalPrice: "",
-      },
-    ],
-    notes: "",
-  };
   const { drafts } = useSelector((state) => state.drafts);
   const { formData } = useSelector((state) => state.formdata);
-
-  if (formData) {
-    initFormik = formData;
-  }
-
-  const toastConfig = {
-    position: toast.POSITION.TOP_RIGHT,
-    autoClose: 2000,
-  };
-
-  const handleSave = (prop) => {
-    // Find if draft is already in draft array
-    const isInArray = drafts.some(
-      (draft) => prop.invoiceNumber === draft.invoiceNumber
-    );
-    if (isInArray) {
-      toast.error(
-        "This invoice has already been added to the draft",
-        toastConfig
-      );
-    } else {
-      const formVal = { ...prop };
-      formVal.items = prop.items.map((item) => {
-        return {
-          item: item.item,
-          desc: item.desc,
-          price: item.price,
-          quantity: item.quantity,
-          totalPrice: parseFloat(item.price * item.quantity),
-        };
-      });
-      let draftArr = [...drafts, formVal];
-      dispatch(setDrafts(draftArr));
-      toast.success("Invoice successfully added to draft", toastConfig);
-    }
-  };
-
-  const handleDeleteDraft = (prop) => {
-    let draftArr = drafts.filter(
-      (draft) => draft.invoiceNumber !== prop.invoiceNumber
-    );
-    dispatch(setDrafts(draftArr));
-    toast.success("Invoice successfully removed from draft", toastConfig);
-  };
+  const [isOpen, setOpen] = useState(false);
+  const { handleDeleteDraft, handlePreview, handleSaveDraft, initFormik } = useInvoice({
+    drafts, formData
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -99,8 +33,6 @@ function InvoicingForm() {
       setLoading(false);
     }, 1000);
   }, []);
-
-  // Initialize savedData variable to store clicked preset
 
   // Show loading screen
   return loading ? (
@@ -134,18 +66,7 @@ function InvoicingForm() {
         validateOnMount
         enableReinitialize
         onSubmit={(values) => {
-          const formVal = { ...values };
-          formVal.items = values.items.map((item) => {
-            return {
-              item: item.item,
-              desc: item.desc,
-              price: item.price,
-              quantity: item.quantity,
-              totalPrice: parseFloat(item.price * item.quantity),
-            };
-          });
-          dispatch(setFormDataValues(formVal));
-          navigate("/preview");
+          handlePreview(values);
         }}
       >
         {/* Deconstruct props from Formik  */}
@@ -158,40 +79,32 @@ function InvoicingForm() {
                   {values.invoiceNumber}
                 </span>
               </label>
-              <InputFieldFormik
+              <CustomInput
                 type="text"
                 name="invoiceNumber"
                 className={"text-black"}
               />
             </div>
-            <InputFieldFormik
+            <CustomInput
               title="Recipient name"
               type="text"
               name="recipientName"
               className={"text-black"}
             />
-            <InputFieldFormik
+            <CustomInput
               title="Recipient email"
               type="email"
               name="recipientEmail"
             />
 
-            <InputFieldFormik
-              title="Client name"
-              type="text"
-              name="clientName"
-            />
-            <InputFieldFormik
-              title="Client email"
-              type="email"
-              name="clientEmail"
-            />
+            <CustomInput title="Client name" type="text" name="clientName" />
+            <CustomInput title="Client email" type="email" name="clientEmail" />
 
             <div className="grid grid-cols-2 gap-[10px] rounded-[10px] ">
-              <InputFieldFormik title="Issued On" type="date" name="issuedOn" />
-              <InputFieldFormik title="Due On" type="date" name="dueOn" />
-              <InputFieldFormik title="Bill From" type="text" name="billFrom" />
-              <InputFieldFormik title="Bill To" type="text" name="billTo" />
+              <CustomInput title="Issued On" type="date" name="issuedOn" />
+              <CustomInput title="Due On" type="date" name="dueOn" />
+              <CustomInput title="Bill From" type="text" name="billFrom" />
+              <CustomInput title="Bill To" type="text" name="billTo" />
             </div>
 
             <div className="flex gap-4 items-center">
@@ -205,21 +118,21 @@ function InvoicingForm() {
                   {values.items.map((item, index) => (
                     <div key={index}>
                       <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2 items-baseline">
-                        <InputFieldFormik
+                        <CustomInput
                           name={`items.${index}.item`}
                           title="Item"
                         />
-                        <InputFieldFormik
+                        <CustomInput
                           name={`items.${index}.desc`}
                           title="Desc"
                           type="text"
                         />
-                        <InputFieldFormik
+                        <CustomInput
                           name={`items.${index}.price`}
                           title="Price"
                           type="number"
                         />
-                        <InputFieldFormik
+                        <CustomInput
                           name={`items.${index}.quantity`}
                           title="Qty"
                           type="number"
@@ -264,14 +177,14 @@ function InvoicingForm() {
               )}
             </FieldArray>
             <div className="mb-[1.4rem]">
-              <InputFieldFormik title="Notes" name="notes" />
+              <CustomInput title="Notes" name="notes" />
             </div>
             <div className="btns flex justify-between my-[4rem] ">
               <Button
                 type="button"
                 title="Save Draft"
                 onClick={() => {
-                  handleSave(values);
+                  handleSaveDraft(values);
                 }}
                 className="text-text"
                 disabled={!isValid}

@@ -128,12 +128,12 @@ function Preview() {
   };
 
   const handleDownloadClick = () => {
-    var pdfObject = jsPDFInvoiceTemplate(props);
+    jsPDFInvoiceTemplate(props);
     // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
 
-    }, 1500);
+    }, 600);
   };
 
   return loading ? (
