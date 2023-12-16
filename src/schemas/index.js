@@ -28,9 +28,12 @@ export const basicSchema = yup.object().shape({
         item: yup.string().required("Please add item name"),
         quantity: yup
           .number()
-          .min(1)
+          .min(1, "Qty must not be less than 1")
           .required("Please input at least 1 quantity"),
-        price: yup.number().min(1).required("Minimum is 1"),
+        price: yup
+          .number()
+          .min(1, "Price must not be less than 1")
+          .required("Minimum is 1"),
       })
     )
     .min(1, "Please add at least one item")
