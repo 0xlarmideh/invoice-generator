@@ -4,9 +4,36 @@ import { setDrafts } from '../../store/slices/draftSlice';
 import { setFormDataValues } from '../../store/slices/formDataSlice';
 import { useNavigate } from 'react-router-dom';
 
-const useInvoice = ({drafts}) => {
+const useInvoice = ({drafts, formData}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let initFormik = {
+    invoiceNumber: "",
+    recipientName: "",
+    recipientEmail: "",
+    clientName: "",
+    clientEmail: "",
+    projectDescription: "",
+    issuedOn: "",
+    dueOn: "",
+    billFrom: "",
+    billTo: "",
+    currency: "",
+    items: [
+      {
+        item: "",
+        desc: "",
+        price: 1,
+        quantity: 1,
+        totalPrice: "",
+      },
+    ],
+    notes: "",
+  };
+
+  if (formData) {
+    initFormik = formData;
+  }
 
   const toastConfig = {
     position: toast.POSITION.TOP_RIGHT,
@@ -62,7 +89,7 @@ const useInvoice = ({drafts}) => {
     dispatch(setFormDataValues(formVal));
     navigate("/preview");
   }
-  return {handleDeleteDraft, handleSaveDraft, handlePreview}
+  return {handleDeleteDraft, handleSaveDraft, handlePreview, initFormik}
 }
 
 export default useInvoice
