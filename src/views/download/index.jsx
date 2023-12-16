@@ -1,13 +1,16 @@
 
 import React, { useState, useEffect } from "react";
-import Button from "../components/form/Button";
+import { Button } from "../../components/form";
 import { useNavigate } from 'react-router-dom';
-import { Paragraph } from "../components/Typography";
+import { Paragraph } from "../../components/typography/Typography";
+import { useDispatch } from "react-redux";
+import { resetFormData } from "../../store/slices/formDataSlice"; 
 
 
 const Downloaded = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -30,6 +33,7 @@ const Downloaded = () => {
           title="+ Create New Invoice"
           className="bg-blue text-white w-[100%] mt-[36px] "
           onClick={() => {
+            dispatch(resetFormData());
             navigate("/invoice");
           }}
         />

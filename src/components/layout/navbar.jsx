@@ -1,4 +1,4 @@
-import { Paragraph } from "./Typography"
+import { Paragraph } from "../typography/Typography"
 import { Icon } from '@iconify/react';
 
 const Navbar = ({onClick}) => {

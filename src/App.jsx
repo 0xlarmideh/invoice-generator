@@ -1,26 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Downloaded from "./views/Downloaded";
-import InvoicingForm from "./views/InvoicingForm";
-import Preview from "./views/Preview";
-import Layout from "./components/layout";
-import Sidebar from "./components/sidebar";
-
+import Downloaded from "./views/download";
+import InvoicingForm from "./views/invoice";
+import Preview from "./views/preview";
+import Layout from "./components/layout/layout";
 
 function App() {
-  const [isShow, setShow] = useState(false)
-  const toggleMenu = () => {
-    setShow(!isShow)
-  }
-  const closeMenu = () => {
-    setShow(!isShow);
-  } 
   return (
     <>
       <BrowserRouter>
-        <div>{isShow ? <Sidebar closeMenu={closeMenu} /> : null} </div>
         <Routes>
-          <Route path="/" element={<Layout onClick={toggleMenu} />}>
+          <Route
+            path="/"
+            element={
+                <Layout />
+            }
+          >
             <Route index element={<InvoicingForm />}></Route>
             <Route path="/invoice" element={<Navigate to="/" />}></Route>
             <Route path="/downloaded" element={<Downloaded />}></Route>
