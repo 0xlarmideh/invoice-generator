@@ -6,8 +6,7 @@ import {
   Heading,
   SmallHeading,
   Paragraph,
-} from "../../components/typography/Typography";
-import { Icon } from "@iconify/react";
+} from "../../components/typography/Typography";``
 import { Button, InputFieldFormik, SelectField } from "../../components/form";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../../schemas";
@@ -16,6 +15,7 @@ import { setDrafts } from "../../store/slices/draftSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setFormDataValues } from "../../store/slices/formDataSlice";
+import Drafts from "./Drafts";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ function InvoicingForm() {
       {
         item: "",
         desc: "",
-        price: "",
+        price: 1,
         quantity: 1,
         totalPrice: "",
       },
@@ -69,16 +69,16 @@ function InvoicingForm() {
         toastConfig
       );
     } else {
-      const formVal = { ...prop }
+      const formVal = { ...prop };
       formVal.items = prop.items.map((item) => {
         return {
           item: item.item,
           desc: item.desc,
           price: item.price,
           quantity: item.quantity,
-          totalPrice: parseFloat(item.price * item.quantity)
-        }
-      })
+          totalPrice: parseFloat(item.price * item.quantity),
+        };
+      });
       let draftArr = [...drafts, formVal];
       dispatch(setDrafts(draftArr));
       toast.success("Invoice successfully added to draft", toastConfig);
@@ -119,52 +119,14 @@ function InvoicingForm() {
         className="text-text text-center pb-[2rem] "
       />
       {/* Map over local storage items */}
-      <div>
-        {drafts?.length ? (
-          <div className=" mb-4 text-text ">
-            <div>
-              <div
-                className="flex justify-between w-full border-b-[1px] items-center pb-4 mb-4 "
-                onClick={() => setOpen(!isOpen)}
-              >
-                <Paragraph title="Drafts" />
-                <Icon
-                  icon="material-symbols:keyboard-arrow-up"
-                  width="24"
-                  rotate={isOpen ? 2 : 0}
-                />
-              </div>
-              {isOpen && (
-                <div className="gap-6 grid grid-cols-3">
-                  {drafts.map((item, index) => {
-                    return (
-                      <div key={index} className="relative">
-                        <div
-                          className="px-4 py-6 hover:bg-black hover:text-white hover:cursor-pointer hover:transition-all hover:duration-700 hover:scale-[1.08] text-left h-full border-2 rounded-[4px]"
-                          onClick={() => {
-                            setFormValues(item);
-                          }}
-                        >
-                          <p className="font-regular text-[16px] w-max  ">
-                            {`Invoice: ${item.invoiceNumber}`}
-                          </p>
-                          <p>Client: {item.clientName} </p>
-                        </div>
-                        <div
-                          className="absolute hover:scale-[1.3] hover:cursor-pointer right-[-18px] top-[-14px]"
-                          onClick={() => handleDeleteDraft(item)}
-                        >
-                          <Icon icon="typcn:delete" color="red" width="36" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </div>
+      <Drafts
+        isOpen={isOpen}
+        onOpen={() => setOpen(!isOpen)}
+        onDelete={(item) => handleDeleteDraft(item)}
+        onSelectvalue={(item) => {
+          setFormValues(item);
+        }}
+      />
       <Formik
         // Use formValues or default state values for form
         initialValues={formValues || initFormik}
@@ -172,16 +134,16 @@ function InvoicingForm() {
         validateOnMount
         enableReinitialize
         onSubmit={(values) => {
-          const formVal = { ...values }
+          const formVal = { ...values };
           formVal.items = values.items.map((item) => {
             return {
               item: item.item,
               desc: item.desc,
               price: item.price,
               quantity: item.quantity,
-              totalPrice: parseFloat(item.price * item.quantity)
-            }
-          })
+              totalPrice: parseFloat(item.price * item.quantity),
+            };
+          });
           dispatch(setFormDataValues(formVal));
           navigate("/preview");
         }}
@@ -262,34 +224,19 @@ function InvoicingForm() {
                           title="Qty"
                           type="number"
                         />
-                        {/* <InputFieldFormik
-                          name={`items.${index}.totalPrice`}
-                          title="Qty"
-                          type="number"
-                          value={
-                            (item.totalPrice = parseFloat(
-                              item.price * item.quantity
-                            ))
-                          }
-                        /> */}
                         <div className="flex flex-col">
                           <p className="text-[20px] font-regular py-[.1rem] text-text">
                             Total
                           </p>
-                          <p
-                            className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px] "
-                          >{
-                              parseFloat(
-                                item.price * item.quantity
-                              )
-                            }</p>
+                          <p className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px] ">
+                            {parseFloat(item.price * item.quantity)}
+                          </p>
                         </div>
                       </div>
                       <button
                         className="font-bold text-red-800"
                         type="button"
                         onClick={() => {
-                          console.log("Clicked");
                           remove(index);
                         }}
                       >
@@ -338,7 +285,6 @@ function InvoicingForm() {
           </Form>
         )}
       </Formik>
-      {/* <ToastContainer /> */}
     </div>
   );
 }
