@@ -1,6 +1,6 @@
 import { Field, ErrorMessage } from "formik";
 
-export const InputFieldFormik = ({ title, type, name, error }) => {
+export const InputFieldFormik = ({ title, type, name, error, ...restProps }) => {
   return (
     <div className="flex flex-col py-[10px]">
       <label className="text-[20px] tracking-wide font-regular py-[.1rem] text-text">
@@ -10,6 +10,7 @@ export const InputFieldFormik = ({ title, type, name, error }) => {
         type={type}
         name={name}
         error={error}
+        {...restProps}
         className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px] "
       />
       <ErrorMessage
@@ -21,10 +22,10 @@ export const InputFieldFormik = ({ title, type, name, error }) => {
   );
 }
 
-export const Button = ({ title, onClick, className, type }) => {
+export const Button = ({ title, className, ...restProps}) => {
   return (
 
-    <button onClick={onClick} type={type} className={`py-[.7rem] px-[.8rem] font-regular text-[18px] rounded-[8px] ${className}`}>{title}</button>
+    <button {...restProps} className={`py-[.7rem] px-[.8rem] font-regular text-[18px] rounded-[8px] ${className}`}>{title}</button>
   );
 };
 
@@ -40,6 +41,7 @@ export const SelectField = ({ title, name, obj }) => {
         id="currency"
         className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
       >
+      <option value="">Select currency</option>
         {Object.keys(obj).map((objitem) => {
           return (
             <option key={objitem} value={objitem}>
@@ -69,39 +71,3 @@ export const TextArea = ({ title, type, name, value, onChange }) => {
     </div>
   );
 };
-
-export const InputField = ({ title, value, onChange, type, name, error }) => {
-  return (
-    <div className="flex flex-col">
-      <label className="text-[20rem] font-medium py-[.3rem] font-regular text-text">
-        {title}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        error={error}
-        onChange={onChange}
-        className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
-      />
-    </div>
-  );
-}
-
-export const InputFieldRO = ({ title, type, name, value, onChange }) => {
-  return (
-    <div className="flex flex-col">
-      <label className="text-[20px] font-regular py-[.1rem] text-text">
-        {title}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        readOnly
-        className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
-      />
-    </div>
-  );
-}

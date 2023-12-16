@@ -2,16 +2,25 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import currencies from "../../../currencies.json";
-import { Heading, SmallHeading, Paragraph } from "../../components/typography/Typography";
+import {
+  Heading,
+  SmallHeading,
+  Paragraph,
+} from "../../components/typography/Typography";
 import { Icon } from "@iconify/react";
-import { Button, InputFieldFormik, InputFieldRO, SelectField } from "../../components/form";
+import { Button, InputFieldFormik, SelectField } from "../../components/form";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../../schemas";
+import { useDispatch, useSelector } from "react-redux";
+import { setDrafts } from "../../store/slices/draftSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { setFormDataValues } from "../../store/slices/formDataSlice";
 
 function InvoicingForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState(null);
+  const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(null);
   const [isOpen, setOpen] = useState(false);
   let initFormik = {
@@ -37,44 +46,61 @@ function InvoicingForm() {
     ],
     notes: "",
   };
+  const { drafts } = useSelector((state) => state.drafts);
+  const { formData } = useSelector((state) => state.formdata);
 
-  let oldData;
-  oldData = JSON.parse(localStorage.getItem("savedItems"));
-  let sData = JSON.parse(sessionStorage.getItem("sessionData"));
-  if (sData) {
-    initFormik = sData;
+  if (formData) {
+    initFormik = formData;
   }
 
+  const toastConfig = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 2000,
+  };
+
   const handleSave = (prop) => {
-    // Create two new variables and use it to save data to storage after click
-    let old_data = [];
-    // let newData = JSON.parse(localStorage.getItem("savedItems"));
-    if (oldData == undefined) {
-      oldData = null;
+    // Find if draft is already in draft array
+    const isInArray = drafts.some(
+      (draft) => prop.invoiceNumber === draft.invoiceNumber
+    );
+    if (isInArray) {
+      toast.error(
+        "This invoice has already been added to the draft",
+        toastConfig
+      );
+    } else {
+      const formVal = { ...prop }
+      formVal.items = prop.items.map((item) => {
+        return {
+          item: item.item,
+          desc: item.desc,
+          price: item.price,
+          quantity: item.quantity,
+          totalPrice: parseFloat(item.price * item.quantity)
+        }
+      })
+      let draftArr = [...drafts, formVal];
+      dispatch(setDrafts(draftArr));
+      toast.success("Invoice successfully added to draft", toastConfig);
     }
-    if (oldData) {
-      old_data = oldData;
-    }
-    // Push the current value gotten from location state to the old data
-    old_data.push(prop);
-    // Update localStorage state
-    localStorage.setItem("savedItems", JSON.stringify(old_data));
+  };
+
+  const handleDeleteDraft = (prop) => {
+    let draftArr = drafts.filter(
+      (draft) => draft.invoiceNumber !== prop.invoiceNumber
+    );
+    dispatch(setDrafts(draftArr));
+    toast.success("Invoice successfully removed from draft", toastConfig);
   };
 
   useEffect(() => {
-    // console.log(oldData);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-
-    if (formData) {
-      navigate("/preview", { state: { formData } });
-    }
-  }, [formData]);
+  }, []);
 
   // Initialize savedData variable to store clicked preset
-  let savedData;
 
   // Show loading screen
   return loading ? (
@@ -83,6 +109,7 @@ function InvoicingForm() {
     </div>
   ) : (
     <div className="max-w-[900px] mx-auto my-[0] p-[20px] shadow ">
+      <ToastContainer />
       <Heading
         title="Invoice Generator App"
         className=" text-center font-monument text-blue pb-[.4rem] "
@@ -93,7 +120,7 @@ function InvoicingForm() {
       />
       {/* Map over local storage items */}
       <div>
-        {oldData && (
+        {drafts?.length ? (
           <div className=" mb-4 text-text ">
             <div>
               <div
@@ -108,48 +135,59 @@ function InvoicingForm() {
                 />
               </div>
               {isOpen && (
-                <div>
-                  {oldData.map((item, index) => {
+                <div className="gap-6 grid grid-cols-3">
+                  {drafts.map((item, index) => {
                     return (
-                      <button
-                        key={index}
-                        // Set savedData to current item
-                        onClick={() => {
-                          savedData = item;
-
-                          // Update formValues state
-                          setFormValues(savedData);
-                          console.log(savedData);
-                        }}
-                      >
-                        <div className=" ">
-                          <p className="font-regular text-[16px] ">
+                      <div key={index} className="relative">
+                        <div
+                          className="px-4 py-6 hover:bg-black hover:text-white hover:cursor-pointer hover:transition-all hover:duration-700 hover:scale-[1.08] text-left h-full border-2 rounded-[4px]"
+                          onClick={() => {
+                            setFormValues(item);
+                          }}
+                        >
+                          <p className="font-regular text-[16px] w-max  ">
                             {`Invoice: ${item.invoiceNumber}`}
                           </p>
-                          <p>{item.recipientName} </p>
+                          <p>Client: {item.clientName} </p>
                         </div>
-                      </button>
+                        <div
+                          className="absolute hover:scale-[1.3] hover:cursor-pointer right-[-18px] top-[-14px]"
+                          onClick={() => handleDeleteDraft(item)}
+                        >
+                          <Icon icon="typcn:delete" color="red" width="36" />
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
               )}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
       <Formik
         // Use formValues or default state values for form
         initialValues={formValues || initFormik}
         validationSchema={basicSchema}
+        validateOnMount
         enableReinitialize
-        onSubmit={(event) => {
-          event.preventDefault();
-          sessionStorage.setItem("sessionData", JSON.stringify(values));
-          console.log(errors);
+        onSubmit={(values) => {
+          const formVal = { ...values }
+          formVal.items = values.items.map((item) => {
+            return {
+              item: item.item,
+              desc: item.desc,
+              price: item.price,
+              quantity: item.quantity,
+              totalPrice: parseFloat(item.price * item.quantity)
+            }
+          })
+          dispatch(setFormDataValues(formVal));
+          navigate("/preview");
         }}
       >
         {/* Deconstruct props from Formik  */}
-        {({ values }) => (
+        {({ values, isValid }) => (
           <Form>
             <div className="flex flex-col text-text text-[21px]">
               <label>
@@ -224,15 +262,28 @@ function InvoicingForm() {
                           title="Qty"
                           type="number"
                         />
-                        <InputFieldRO
+                        {/* <InputFieldFormik
                           name={`items.${index}.totalPrice`}
+                          title="Qty"
+                          type="number"
                           value={
                             (item.totalPrice = parseFloat(
                               item.price * item.quantity
                             ))
                           }
-                          title="Total"
-                        />
+                        /> */}
+                        <div className="flex flex-col">
+                          <p className="text-[20px] font-regular py-[.1rem] text-text">
+                            Total
+                          </p>
+                          <p
+                            className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px] "
+                          >{
+                              parseFloat(
+                                item.price * item.quantity
+                              )
+                            }</p>
+                        </div>
                       </div>
                       <button
                         className="font-bold text-red-800"
@@ -272,8 +323,11 @@ function InvoicingForm() {
               <Button
                 type="button"
                 title="Save Draft"
-                onClick={() => handleSave(values)}
+                onClick={() => {
+                  handleSave(values);
+                }}
                 className="text-text"
+                disabled={!isValid}
               />
               <Button
                 type="submit"
@@ -284,6 +338,7 @@ function InvoicingForm() {
           </Form>
         )}
       </Formik>
+      {/* <ToastContainer /> */}
     </div>
   );
 }

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SmallHeading, Paragraph } from "../../components/typography/Typography.jsx";
 import { Button } from "../../components/form/index.jsx";
 import jsPDFInvoiceTemplate from "../../components/jsPdf/jsPDFTemplate.js";
 import { OutputType } from "../../components/jsPdf/outputType.js";
+import { useSelector } from "react-redux";
 
 function Preview() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const formData = location.state?.formData;
+  const { formData } = useSelector(state => state.formdata)
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
@@ -34,8 +34,8 @@ function Preview() {
     totalAmount += item.totalPrice;
   });
 
- 
-  // PDF Section
+
+  // // PDF Section
   var props = {
     outputType: OutputType.Save,
     returnJsPDFDocObject: true,
@@ -229,11 +229,11 @@ function Preview() {
       <div className="grid grid-cols-[56%_30%_14%] py-[.4rem] px-[.35rem] font-medium ">
         <span></span>
         <SmallHeading
-          className="text-slate-500 text-[1.2rem]"
+          className="text-slate-500 !font-bold text-[1.2rem]"
           title="Total"
         />
         <SmallHeading
-          className="text-blue text-[1.2rem]"
+          className="text-blue !font-bold text-[1.2rem]"
           title={`${totalAmount}` + " " + `${formData.currency}`}
         />
       </div>
