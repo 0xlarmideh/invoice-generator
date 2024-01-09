@@ -11,7 +11,7 @@ import {
 import { Button, CustomInput, SelectField } from "../../components/form";
 import { Form, Formik, FieldArray } from "formik";
 import { basicSchema } from "../../schemas";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Drafts from "./Drafts";
@@ -40,7 +40,7 @@ function InvoicingForm() {
       <span className="loader"></span>
     </div>
   ) : (
-    <div className="max-w-[900px] mx-auto my-[0] p-[20px] shadow ">
+    <div className="max-w-[900px] mx-auto mt-[0] mb-8 p-[20px] pb-[10px] shadow ">
       <ToastContainer />
       <Heading
         title="Invoice Generator App"
