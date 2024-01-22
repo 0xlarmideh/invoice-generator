@@ -22,7 +22,6 @@ const useInvoice = ({drafts, formData}) => {
     items: [
       {
         item: "",
-        desc: "",
         price: 1,
         quantity: 1,
         totalPrice: "",
@@ -55,7 +54,6 @@ const useInvoice = ({drafts, formData}) => {
       formVal.items = prop.items.map((item) => {
         return {
           item: item.item,
-          desc: item.desc,
           price: item.price,
           quantity: item.quantity,
           totalPrice: parseFloat(item.price * item.quantity),
@@ -80,7 +78,6 @@ const useInvoice = ({drafts, formData}) => {
     formVal.items = values.items.map((item) => {
       return {
         item: item.item,
-        desc: item.desc,
         price: item.price,
         quantity: item.quantity,
         totalPrice: parseFloat(item.price * item.quantity),

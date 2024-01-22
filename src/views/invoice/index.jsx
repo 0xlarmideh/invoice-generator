@@ -117,15 +117,10 @@ function InvoicingForm() {
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className="grid grid-cols-[25%_39%_10%_7%_13%] gap-2 items-baseline">
+                      <div className="grid grid-cols-[1fr_120px_100px_120px] gap-2 items-baseline">
                         <CustomInput
                           name={`items.${index}.item`}
                           title="Item"
-                        />
-                        <CustomInput
-                          name={`items.${index}.desc`}
-                          title="Desc"
-                          type="text"
                         />
                         <CustomInput
                           name={`items.${index}.price`}
@@ -163,7 +158,6 @@ function InvoicingForm() {
                     onClick={(e) => {
                       push({
                         item: "",
-                        desc: "",
                         price: "",
                         quantity: 1,
                         totalPrice: "",
