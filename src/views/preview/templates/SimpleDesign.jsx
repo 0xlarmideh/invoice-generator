@@ -42,8 +42,7 @@ const SimpleDesign = ({ formData, totalAmount }) => {
               >
                 <p class="text-[10px] text-[#868DA6]">AMOUNT DUE</p>
                 <p class="text-[27px] font-[600] text-[#19213D]">
-                  {formData.currency }
-                  {totalAmount}
+                  {formData.currency} {totalAmount}
                 </p>
                 <p class="text-[10px] text-[#868DA6]">
                   {dayjs(formData.issuedOn).format("MMMM D, YYYY")}
