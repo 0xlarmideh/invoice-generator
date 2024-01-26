@@ -13,13 +13,14 @@ import SelectInvoiceDesignType from "./SelectInvoiceType.jsx";
 import DefaultDesign from "./templates/DefaultDesign.jsx";
 import MinimalistDesign from "./templates/MinimalistDesign.jsx";
 import SimpleDesign from "./templates/SimpleDesign.jsx";
+import useJsPDFProps from "../../components/jsPdf/useJsPDFProps.js";
 
 function Preview() {
   const navigate = useNavigate();
   const { formData } = useSelector((state) => state.formdata);
   const { CustomFetchPOSTRequest } = useFetch();
   const [loading, setLoading] = useState(false);
-  
+
   let number = 0;
   let totalAmount = 0;
   formData?.items.forEach((item) => {
@@ -46,6 +47,8 @@ function Preview() {
   ];
   const [invoiceDesign, selectInvoiceDesign] = useState(InvoiceDesignArray[0]);
 
+  const { pdfProps } = useJsPDFProps({ formData, totalAmount, number })
+
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -63,20 +66,26 @@ function Preview() {
     navigate("/invoice");
   };
 
-  
+
 
   const handleDownloadClick = async () => {
-    await CustomFetchPOSTRequest("http://localhost:5000/api/invoice", {
-      ...formData,
-      invoiceStyle: "MINIMALIST",
-      totalAmount,
-    });
-    // jsPDFInvoiceTemplate(props);
-    // // Navigate to download screen
-    // navigate("/downloaded");
-    // setTimeout(() => {
+    // Enable once Backend is fully done
+    // if (invoiceDesign.value !== "DEFAULT") {
+    //   await CustomFetchPOSTRequest("http://localhost:5000/api/invoice", {
+    //     ...formData,
+    //     invoiceStyle: invoiceDesign.value,
+    //     totalAmount,
+    //   });
+    // }
+    // else {
+    jsPDFInvoiceTemplate(pdfProps);
+    // Navigate to download screen
+    navigate("/downloaded");
+    setTimeout(() => {
 
-    // }, 600);
+    }, 600);
+    // }
+
   };
 
   return loading ? (
