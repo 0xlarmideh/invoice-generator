@@ -24,7 +24,7 @@ const Downloaded = () => {
   ) : (
     <div className="downloaded">
       <div className="check mx-auto my-0  text-text w-[360px] ">
-        <img src="../../src/assets/invoice1.svg" width="320px" />
+        <img src="/invoice1.svg" width="320px" />
         <Paragraph
           title="Your invoice has been generated successfully."
           className="text-center"

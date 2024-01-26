@@ -1,20 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { SmallHeading, Paragraph } from "../../components/typography/Typography.jsx";
+import {
+  SmallHeading,
+  Paragraph,
+} from "../../components/typography/Typography.jsx";
 import { Button } from "../../components/form/index.jsx";
 import jsPDFInvoiceTemplate from "../../components/jsPdf/jsPDFTemplate.js";
 import { OutputType } from "../../components/jsPdf/outputType.js";
 import { useSelector } from "react-redux";
+import { useFetch } from "../../utils/hooks/useFetch.js";
+import SelectInvoiceDesignType from "./SelectInvoiceType.jsx";
+import DefaultDesign from "./templates/DefaultDesign.jsx";
+import MinimalistDesign from "./templates/MinimalistDesign.jsx";
+import SimpleDesign from "./templates/SimpleDesign.jsx";
+import useJsPDFProps from "../../components/jsPdf/useJsPDFProps.js";
 
 function Preview() {
   const navigate = useNavigate();
-  const { formData } = useSelector(state => state.formdata)
+  const { formData } = useSelector((state) => state.formdata);
+  const { CustomFetchPOSTRequest } = useFetch();
   const [loading, setLoading] = useState(false);
+
+  let number = 0;
+  let totalAmount = 0;
+  formData?.items.forEach((item) => {
+    number += 1;
+    totalAmount += item.totalPrice;
+  });
+
+  const InvoiceDesignArray = [
+    {
+      value: "DEFAULT",
+      name: "Default",
+      component: <DefaultDesign formData={formData} totalAmount={totalAmount} />,
+    },
+    {
+      value: "MINIMALIST",
+      name: "Minimalist",
+      component: <MinimalistDesign formData={formData} totalAmount={totalAmount} />,
+    },
+    {
+      value: "SIMPLE",
+      name: "Simple",
+      component: <SimpleDesign formData={formData} totalAmount={totalAmount} />,
+    },
+  ];
+  const [invoiceDesign, selectInvoiceDesign] = useState(InvoiceDesignArray[0]);
+
+  const { pdfProps } = useJsPDFProps({ formData, totalAmount, number })
+
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   if (!formData) {
@@ -27,113 +66,26 @@ function Preview() {
     navigate("/invoice");
   };
 
-  let number = 0;
-  let totalAmount = 0;
-  formData.items.forEach((item) => {
-    number += 1;
-    totalAmount += item.totalPrice;
-  });
 
 
-  // // PDF Section
-  var props = {
-    outputType: OutputType.Save,
-    returnJsPDFDocObject: true,
-    fileName: "Invoice",
-    orientationLandscape: false,
-    compress: true,
-    stamp: {
-      inAllPages: true, //by default = false, just in the last page
-      src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
-      type: "JPG", //optional, when src= data:uri (nodejs case)
-      width: 20, //aspect ratio = width/height
-      height: 20,
-      margin: {
-        top: 0, //negative or positive num, from the current position
-        left: 0, //negative or positive num, from the current position
-      },
-    },
-
-    business: {
-      label: "Invoice issued from:",
-      name: `${formData.recipientName}`,
-      address: `${formData.billFrom}`,
-      email: `${formData.recipientEmail}`,
-    },
-
-    contact: {
-      label: "Invoice issued for:",
-      name: `${formData.clientName}`,
-      address: `${formData.billTo}`,
-      email: `${formData.clientEmail}`,
-    },
-
-    invoice: {
-      label: `Invoice #: `,
-      num: `${formData.invoiceNumber}`,
-      invDate: `${formData.issuedOn}`,
-      invGenDate: `${formData.dueDate}`,
-      headerBorder: false,
-      tableBodyBorder: false,
-      header: [
-        {
-          title: "#",
-          style: {
-            width: 10,
-          },
-        },
-        {
-          title: "Title",
-          style: {
-            width: 30,
-          },
-        },
-        {
-          title: "Description",
-          style: {
-            width: 80,
-          },
-        },
-        { title: "Price" },
-        { title: "Quantity" },
-        // { title: "Unit" },
-        { title: "Total" },
-      ],
-      table: Array.from(Array(number), (item, index) => [
-        index + 1,
-        `${formData.items[index].item}`,
-        `${formData.items[index].desc}`,
-        `${formData.items[index].price} `,
-        `${formData.items[index].quantity}`,
-        `${formData.items[index].totalPrice} ${formData.currency}`,
-      ]),
-      additionalRows: [
-        {
-          col1: "Total:",
-          col2: `${totalAmount} ${formData.currency}`,
-          col3: "ALL",
-          style: {
-            fontSize: 14, //optional, default 12
-          },
-        },
-      ],
-      invDescLabel: "Invoice Note",
-      invDesc: `${formData?.notes}`,
-    },
-    footer: {
-      text: "The invoice is created on a computer and is valid without the signature and stamp.",
-    },
-    pageEnable: true,
-    pageLabel: "Page ",
-  };
-
-  const handleDownloadClick = () => {
-    jsPDFInvoiceTemplate(props);
+  const handleDownloadClick = async () => {
+    // Enable once Backend is fully done
+    // if (invoiceDesign.value !== "DEFAULT") {
+    //   await CustomFetchPOSTRequest("http://localhost:5000/api/invoice", {
+    //     ...formData,
+    //     invoiceStyle: invoiceDesign.value,
+    //     totalAmount,
+    //   });
+    // }
+    // else {
+    jsPDFInvoiceTemplate(pdfProps);
     // Navigate to download screen
     navigate("/downloaded");
     setTimeout(() => {
 
     }, 600);
+    // }
+
   };
 
   return loading ? (
@@ -142,109 +94,20 @@ function Preview() {
     </div>
   ) : (
     <div className="max-w-[900px] mx-auto pb-[4rem] p-[20px] text-text shadow">
-      <div className="text-[24px] pb-[16px] ">
-        Invoice Number:{" "}
-        <span className="font-medium text-blue">{formData.invoiceNumber}</span>
-      </div>
-
-      <Paragraph
-        title={formData.notes}
-        className="border-b-2 border-slate-100 text-text pb-[2rem] mb-[1.2rem] "
-      />
-
-      <div className="grid gap-6 grid-cols-2 mb-[1rem]">
-        <div>
-          <Paragraph
-            title="Bill From"
-            className="text-slate-500 pb-[14px] font-medium "
-          />
-          <div className="ml-[5px] ">
-            <SmallHeading
-              title={formData.recipientName}
-              className="pb-[14px]"
-            />
-            <Paragraph
-              title={formData.billFrom}
-              className="text-slate-500 pb-[18px]"
-            />
-          </div>
-          <div>
-            <Paragraph
-              title="Issued On"
-              className="text-slate-500 pb-[14px] font-medium"
-            />
-            <div className="ml-[5px] ">
-              <SmallHeading title={formData.issuedOn} className="pb-[14px]" />
-            </div>
-          </div>
-        </div>
-        <div className="justify-end flex">
-          <div>
-            <Paragraph
-              title="Bill To"
-              className="text-slate-500 pb-[14px] font-medium"
-            />
-            <div className="ml-[5px] ">
-              <SmallHeading title={formData.clientName} className="pb-[14px]" />
-              <Paragraph
-                title={formData.billTo}
-                className="text-slate-500 pb-[18px]"
-              />
-            </div>
-            <div>
-              <Paragraph
-                title="Due On"
-                className="text-slate-500 pb-[14px] font-medium"
-              />
-              <div className="ml-[5px] ">
-                <SmallHeading title={formData.dueOn} className="pb-[14px]" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-[1.2rem] pt-[.4rem] text-[20px] font-medium ">
-        Invoice Items
+      <div className="mb-10">
+        <SelectInvoiceDesignType
+          InvoiceDesignTypes={InvoiceDesignArray}
+          invoiceDesignType={invoiceDesign.value}
+          onInvoiceDesignClicked={(value) => selectInvoiceDesign(value)}
+        />
       </div>
       <div>
-        <div className="grid grid-cols-[56%_15%_15%_14%] py-[.4rem] px-[.35rem] text-slate-500 ">
-          <Paragraph title="Description" />
-          <Paragraph title="Price" />
-          <Paragraph title="Qty" />
-          <Paragraph title="Total " />
-        </div>
-        {formData.items.map((item, index) => (
-          <div
-            className="grid grid-cols-[56%_15%_15%_14%] py-[.8rem] px-[.35rem]"
-            key={index}
-          >
-            <SmallHeading title={item.item} />
-            <SmallHeading title={item.price} />
-            <SmallHeading title={item.quantity} />
-            <SmallHeading title={item.totalPrice + formData.currency} />
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-[56%_30%_14%] py-[.4rem] px-[.35rem] font-medium ">
-        <span></span>
-        <SmallHeading
-          className="text-slate-500 !font-bold text-[1.2rem]"
-          title="Total"
-        />
-        <SmallHeading
-          className="text-blue !font-bold text-[1.2rem]"
-          title={`${totalAmount}` + " " + `${formData.currency}`}
-        />
+        {invoiceDesign.component}
       </div>
 
       <div className="my-[5rem]"></div>
       <div className="flex justify-between">
-        <Button
-          onClick={handleEditClick}
-          title="Edit"
-          className="text-text"
-        />
+        <Button onClick={handleEditClick} title="Edit" className="text-text" />
         <Button
           onClick={handleDownloadClick}
           title="Download PDF"
