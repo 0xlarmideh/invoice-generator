@@ -54,6 +54,7 @@ function Preview() {
     setTimeout(() => {
       setLoading(false);
     }, 500);
+    console.log(import.meta.env.VITE_API_URL)
   }, []);
 
   if (!formData) {
@@ -70,21 +71,21 @@ function Preview() {
 
   const handleDownloadClick = async () => {
     // Enable once Backend is fully done
-    // if (invoiceDesign.value !== "DEFAULT") {
-    //   await CustomFetchPOSTRequest("http://localhost:5000/api/invoice", {
-    //     ...formData,
-    //     invoiceStyle: invoiceDesign.value,
-    //     totalAmount,
-    //   });
-    // }
-    // else {
-    jsPDFInvoiceTemplate(pdfProps);
-    // Navigate to download screen
-    navigate("/downloaded");
-    setTimeout(() => {
+    if (invoiceDesign.value !== "DEFAULT") {
+      await CustomFetchPOSTRequest(`${import.meta.env.VITE_API_URL}/invoice`, {
+        ...formData,
+        invoiceStyle: invoiceDesign.value,
+        totalAmount,
+      });
+    }
+    else {
+      jsPDFInvoiceTemplate(pdfProps);
+      // Navigate to download screen
+      navigate("/downloaded");
+      setTimeout(() => {
 
-    }, 600);
-    // }
+      }, 600);
+    }
 
   };
 
