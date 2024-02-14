@@ -121,7 +121,7 @@ const MinimalistDesign = ({ formData, totalAmount }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {formData.items.map((item, idx) => (
+                  {formData.items?.map((item, idx) => (
                     <tr
                       key={idx}
                       style={{borderBottom: "0.6px solid #ebeff6", backgroundColor:"#ebeff6"}}

@@ -113,7 +113,7 @@ const SimpleDesign = ({ formData, totalAmount }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {formData.items.map((item, idx) => (
+                  {formData.items?.map((item, idx) => (
                     <tr
                       key={idx}
                       style={{

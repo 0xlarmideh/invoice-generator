@@ -14,16 +14,17 @@ import DefaultDesign from "./templates/DefaultDesign.jsx";
 import MinimalistDesign from "./templates/MinimalistDesign.jsx";
 import SimpleDesign from "./templates/SimpleDesign.jsx";
 import useJsPDFProps from "../../components/jsPdf/useJsPDFProps.js";
+import { ToastContainer, toast } from "react-toastify";
 
 function Preview() {
   const navigate = useNavigate();
-  const { formData } = useSelector((state) => state.formdata);
+  const  formData  = useSelector((state) => state.formdata.formData) ;
   const { CustomFetchPOSTRequest } = useFetch();
   const [loading, setLoading] = useState(false);
 
   let number = 0;
   let totalAmount = 0;
-  formData?.items.forEach((item) => {
+  formData?.items?.forEach((item) => {
     number += 1;
     totalAmount += item.totalPrice;
   });
@@ -50,16 +51,10 @@ function Preview() {
   const { pdfProps } = useJsPDFProps({ formData, totalAmount, number })
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    if (!formData) {
+      navigate("/");
+    }
   }, []);
-
-  if (!formData) {
-    navigate("/");
-    return null;
-  }
 
   const handleEditClick = () => {
     // window.history.back()
@@ -71,12 +66,24 @@ function Preview() {
   const handleDownloadClick = async () => {
     // Enable once Backend is fully done
     if (invoiceDesign.value !== "DEFAULT") {
+      setLoading(true);
       await CustomFetchPOSTRequest("http://localhost:5000/api/invoice", {
         ...formData,
         invoiceStyle: invoiceDesign.value,
         totalAmount,
       }).then(() => {
-        navigate("/downloaded");
+        try {
+          setLoading(false);
+          navigate("/downloaded");
+        } catch (error) {
+          toast.error(
+            "An error occurred while creating invoice",
+            {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 2000,
+            }
+          );
+        }
       });
     }
     else {
@@ -94,6 +101,7 @@ function Preview() {
     </div>
   ) : (
     <div className="max-w-[900px] mx-auto pb-[4rem] p-[20px] text-text shadow">
+        <ToastContainer />
       <div className="mb-10">
         <SelectInvoiceDesignType
           InvoiceDesignTypes={InvoiceDesignArray}
@@ -110,8 +118,8 @@ function Preview() {
         <Button onClick={handleEditClick} title="Edit" className="text-text" />
         <Button
           onClick={handleDownloadClick}
-          title="Download PDF"
-          className="bg-blue text-white"
+          title={loading ? "Downloading" : "Download PDF"}
+          className={loading ? "bg-grey-700 text-slate-200" : "bg-blue text-white"}
         />
       </div>
     </div>

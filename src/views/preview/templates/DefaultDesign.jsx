@@ -5,11 +5,11 @@ const DefaultDesign = ({formData, totalAmount}) => {
   return (
     <div><div className="text-[24px] pb-[16px] ">
       Invoice Number:{" "}
-      <span className="font-medium text-blue">{formData.invoiceNumber}</span>
+      <span className="font-medium text-blue">{formData?.invoiceNumber}</span>
     </div>
 
       <Paragraph
-        title={formData.notes}
+        title={formData?.notes}
         className="border-b-2 border-slate-100 text-text pb-[2rem] mb-[1.2rem] "
       />
 
@@ -21,11 +21,11 @@ const DefaultDesign = ({formData, totalAmount}) => {
           />
           <div className="ml-[5px] ">
             <SmallHeading
-              title={formData.recipientName}
+              title={formData?.recipientName}
               className="pb-[14px]"
             />
             <Paragraph
-              title={formData.billFrom}
+              title={formData?.billFrom}
               className="text-slate-500 pb-[18px]"
             />
           </div>
@@ -35,7 +35,7 @@ const DefaultDesign = ({formData, totalAmount}) => {
               className="text-slate-500 pb-[14px] font-medium"
             />
             <div className="ml-[5px] ">
-              <SmallHeading title={formData.issuedOn} className="pb-[14px]" />
+              <SmallHeading title={formData?.issuedOn} className="pb-[14px]" />
             </div>
           </div>
         </div>
@@ -46,9 +46,9 @@ const DefaultDesign = ({formData, totalAmount}) => {
               className="text-slate-500 pb-[14px] font-medium"
             />
             <div className="ml-[5px] ">
-              <SmallHeading title={formData.clientName} className="pb-[14px]" />
+              <SmallHeading title={formData?.clientName} className="pb-[14px]" />
               <Paragraph
-                title={formData.billTo}
+                title={formData?.billTo}
                 className="text-slate-500 pb-[18px]"
               />
             </div>
@@ -58,7 +58,7 @@ const DefaultDesign = ({formData, totalAmount}) => {
                 className="text-slate-500 pb-[14px] font-medium"
               />
               <div className="ml-[5px] ">
-                <SmallHeading title={formData.dueOn} className="pb-[14px]" />
+                <SmallHeading title={formData?.dueOn} className="pb-[14px]" />
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ const DefaultDesign = ({formData, totalAmount}) => {
           <Paragraph title="Qty" />
           <Paragraph title="Total " />
         </div>
-        {formData.items.map((item, index) => (
+        {formData?.items?.map((item, index) => (
           <div
             className="grid grid-cols-[56%_15%_15%_14%] py-[.8rem] px-[.35rem]"
             key={index}
@@ -83,7 +83,7 @@ const DefaultDesign = ({formData, totalAmount}) => {
             <SmallHeading title={item.item} />
             <SmallHeading title={item.price} />
             <SmallHeading title={item.quantity} />
-            <SmallHeading title={item.totalPrice + formData.currency} />
+            <SmallHeading title={item.totalPrice + formData?.currency} />
           </div>
         ))}
       </div>
@@ -95,7 +95,7 @@ const DefaultDesign = ({formData, totalAmount}) => {
         />
         <SmallHeading
           className="text-blue !font-bold text-[1.2rem]"
-          title={`${totalAmount}` + " " + `${formData.currency}`}
+          title={`${totalAmount}` + " " + `${formData?.currency}`}
         />
       </div></div>
   )
