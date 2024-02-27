@@ -31,13 +31,6 @@ function InvoicingForm() {
       formData,
     });
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  // }, []);
-
   // Show loading screen
   return loading ? (
     <div className="loading-spinner">
