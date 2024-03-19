@@ -84,6 +84,7 @@ function Preview() {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 15000,
       });
+      navigate("/downloaded");
     },
     removeAfterPrint: true,
     bodyClass: "px-6",
@@ -92,7 +93,6 @@ function Preview() {
   const handleDownloadClick = async () => {
     if (invoiceDesign.value !== "DEFAULT") {
       await handlePrintPDF(null, () => contentToPrint.current);
-      navigate("/downloaded");
     } else {
       jsPDFInvoiceTemplate(pdfProps);
       navigate("/downloaded");
