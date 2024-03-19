@@ -91,7 +91,7 @@ function Preview() {
 
   const handleDownloadClick = async () => {
     if (invoiceDesign.value !== "DEFAULT") {
-      handlePrintPDF(null, () => contentToPrint.current);
+      await handlePrintPDF(null, () => contentToPrint.current);
       navigate("/downloaded");
     } else {
       jsPDFInvoiceTemplate(pdfProps);
