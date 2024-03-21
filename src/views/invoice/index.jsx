@@ -99,31 +99,6 @@ function InvoicingForm() {
 
             <div className="grid grid-cols-2 gap-[10px] rounded-[10px] ">
               <CustomInput title="Issued On" type="date" name="issuedOn" />
-              {/* <div className="w-full">
-                <div className="flex flex-col py-[10px] w-full">
-                  <label className="text-[20px] tracking-wide font-regular py-[.1rem] text-text">
-                    Issued
-                  </label>
-                  <Field
-                    component={() => (
-                      <ReactDatePicker
-                        showIcon
-                        selected={startDate}
-                        onChange={(date) => {
-                          setStartDate(date);
-                        }}
-                        className="font-regular w-full font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300  py-[20px] rounded-[10px]"
-                      />
-                    )}
-                    name={"issued"}
-                  ></Field>
-                  <ErrorMessage
-                    component="div"
-                    className="text-red-700 text-[16px] font-semibold"
-                    name={"issued"}
-                  />
-                </div>
-              </div> */}
               <CustomInput title="Due On" type="date" name="dueOn" />
               <CustomInput title="Bill From" type="text" name="billFrom" />
               <CustomInput title="Bill To" type="text" name="billTo" />
@@ -139,7 +114,7 @@ function InvoicingForm() {
                 <div>
                   {values.items.map((item, index) => (
                     <div key={index}>
-                      <div className="grid grid-cols-[1fr_120px_100px_120px] gap-2 items-baseline">
+                      <div className="grid grid-cols-2 md:grid-cols-[1fr_120px_100px_120px] gap-2 items-baseline">
                         <CustomInput
                           name={`items.${index}.item`}
                           title="Item"

@@ -2,7 +2,7 @@ import { Field, ErrorMessage } from "formik";
 
 export const CustomInput = ({ title, type, name, error, ...restProps }) => {
   return (
-    <div className="flex flex-col py-[10px]">
+    <div className="flex w-full flex-col py-[10px]">
       <label className="text-[20px] tracking-wide font-regular py-[.1rem] text-text">
         {title}
       </label>
@@ -20,12 +20,16 @@ export const CustomInput = ({ title, type, name, error, ...restProps }) => {
       />
     </div>
   );
-}
+};
 
-export const Button = ({ title, className, ...restProps}) => {
+export const Button = ({ title, className, ...restProps }) => {
   return (
-
-    <button {...restProps} className={`py-[.7rem] px-[.8rem] font-regular text-[18px] rounded-[8px] ${className}`}>{title}</button>
+    <button
+      {...restProps}
+      className={`py-[.7rem] px-[.8rem] font-regular text-[18px] rounded-[8px] ${className}`}
+    >
+      {title}
+    </button>
   );
 };
 
@@ -41,7 +45,7 @@ export const SelectField = ({ title, name, obj }) => {
         id="currency"
         className="font-regular font-grotesk text-[16px] text-text p-[12px] border-[2px] border-slate-200 focus:outline-none focus:border-cyan-300 rounded-[10px]"
       >
-      <option value="">Select currency</option>
+        <option value="">Select currency</option>
         {Object.keys(obj).map((objitem) => {
           return (
             <option key={objitem} value={objitem}>
